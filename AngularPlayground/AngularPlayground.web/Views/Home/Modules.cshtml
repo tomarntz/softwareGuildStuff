@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Modules";
+}
+
+<h2>Modules</h2>
+
+<div class="row" ng-app="demoApp">
+    <div class="col-sm-4" ng-controller="simpleController">
+        <ul>
+            <li ng-repeat="player in players">
+                {{player.name}} - {{player.city}}
+            </li>
+        </ul>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/scripts/app/module.js"></script>
+}

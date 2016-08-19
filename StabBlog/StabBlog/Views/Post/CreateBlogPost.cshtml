@@ -1,0 +1,56 @@
+﻿@model StabBlog.Models.ViewModels.BlogPostVM
+@{
+    ViewBag.Title = "CreateBlogPost";
+}
+
+<h2>Create Blog Post</h2>
+<div class="row">
+    @using (Html.BeginForm("CreateBlogPost", "Post", FormMethod.Post, new {@id="postForm"}))
+    {
+        <div class="form-group">
+            <label>Blog Post Title</label>
+            @Html.TextBoxFor(m => m.Post.Title, new {@class = "form-control"})
+        </div>
+        <div class="form-group">
+            <label>Enter your Blog Post Image Path:</label>
+            @Html.TextBoxFor(m => m.Post.ImagePath, new {@class="form-control"})
+        </div>
+        <div class="form-group">
+            <label>Enter Your Content Below</label>
+            <div class="row">
+                @Html.TextAreaFor(m => m.Post.Content, new {@class = "form-control"})
+            </div>
+        </div>
+        <div class="form-group" id="tag-text">
+            <label>Enter your tags seperated by a space:</label>
+            @Html.TextAreaFor(m => m.Post.Tags, new {@class="form-control"})
+        </div>
+        <div class="form-group">
+            <label>Please Select The Categories</label>
+            <div class="row">
+                <span>
+            @foreach (var cat in Model.Categories)
+            {
+                <span><input type="checkbox" name="checkboxList" value="@cat.CategoryId"/> @cat.CategoryName</span><br/>
+            }
+            </span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-danger">@Html.ActionLink("Cancel", "AdminHome", "Admin", null, new {@style="text-decoration:none"})</button>
+    }
+</div>
+
+@section scripts{
+    <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+    <script src="~/Scripts/tinymce/CustomPostTinyMce.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/app/Validation-Default.js"></script>
+    <script src="~/Scripts/app/BlogPostValidation.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.0.min.js"></script>
+    <script src="~/Scripts/app/PostAutoComplete.js"></script>
+}
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="~/Content/app/LoginStyleSheet.css">
+}

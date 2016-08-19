@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Filters";
+}
+
+<h2>Filters</h2>
+
+<div class="row" ng-app ng-init="friends=[{name:'John',phone:'555-1212',age:26},
+     {name:'Mary',phone:'555-9876',age:19},
+     {name:'Mike',phone:'999-1212',age:21},
+     {name:'Alan',phone:'111-3456',age:35},
+     {name:'Julie',phone:'333-5678',age:29}]">
+    <div class="col-sm-4">
+        <input type="text" ng-model="friendFilter"/>
+    </div>
+    <div class="col-sm-4">
+        <ul>
+            <li ng-repeat="friend in friends | filter:{name:friendFilter} | orderBy:'name'">
+                {{friend.name}}, {{friend.phone}}, age:{{friend.age}}
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model ModelBinding101.Models.Person
+@{
+    ViewBag.Title = "ObjectBinding";
+}
+
+<h2>ObjectBinding</h2>
+
+@using (Html.BeginForm("ObjectBinding", "Home", FormMethod.Post))
+{
+    <div class="form-group">
+        <label>Person Id</label>
+        @Html.TextBoxFor(p=>p.PersonId, new {@class = "form-control"})
+        @*<input type="text" name="PersonId" class="form-control" />*@
+    </div>
+    <div class="form-group">
+        <label>FirstName</label>
+        @Html.TextBoxFor(p=>p.FirstName,new {@class = "form-control"})
+    @*    <input type="text" name="FirstName" class="form-control" />*@
+    </div>
+    <div class="form-group">
+        <label>Last Name</label>
+        @Html.TextBoxFor(p => p.LastName, new { @class = "form-control" })
+
+        @*<input type="text" name="LastName" class="form-control" />*@
+    </div>
+    <button class="btn btn-primary">submit</button>
+}

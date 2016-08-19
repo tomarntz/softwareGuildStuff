@@ -1,0 +1,52 @@
+﻿@model List<Contacts.Models.Contact>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<div>
+    <h1>My Contacts</h1>
+    @Html.ActionLink("Add Contact", "AddContact", "Home")
+    @if (Model.Any())
+    {
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var contact in Model)
+            {
+                <tr>
+                    <td>@contact.Name</td>
+                    <td>@contact.PhoneNumber</td>
+                    <td>@Html.ActionLink("Edit", "EditContact", "Home", new {id=contact.ContactID}, null)</td>
+                    <td>
+                        <form action="/Home/DeleteContact" method="post">
+                            <input type="hidden" name="ContactID" id="ContactID" value="@contact.ContactID"/>
+                            <button>Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>You have no Contacts, how sad!</p>
+    }
+</div>
+</body>
+</html>

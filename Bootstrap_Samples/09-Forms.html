@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css">
+	</head>
+	<body>
+		<div class="container">
+			<div class="page-header">
+				<h1>Regular Form</h1>
+			</div>	
+			<div class="row">
+				<div class="col-xs-12 col-md-6">
+					<form class="form">
+						<div class="form-group">
+							<label for="nameField">Name</label>
+							<input type="text" class="form-control" id="nameField" placeholder="Your Name" />
+						</div>
+						<div class="form-group">
+							<label for="noteField">Notes</label>
+							<textarea type="text" class="form-control" id="noteField" placeholder="Your comments"></textarea>
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="reset" class="btn btn-default">Reset</button>
+					</form>
+				</div>
+			</div>
+			<div class="page-header">
+				<h1>Horizontal Form</h1>
+			</div>	
+			<div class="row">
+				<div class="col-xs-12 col-md-6">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label for="nameField" class="col-xs-2">Name</label>
+							<div class="col-xs-10">
+								<input type="text" class="form-control" id="nameField" placeholder="Your Name" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="noteField" class="col-xs-2">Notes</label>
+							<div class="col-xs-10">
+								<textarea type="text" class="form-control" id="noteField" placeholder="Your comments"></textarea>
+							</div>
+						</div>
+						<div class="col-xs-10 col-xs-offset-2">
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="reset" class="btn btn-default">Reset</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="page-header">
+				<h1>Inline Form</h1>
+			</div>	
+			<div class="row">
+				<div class="col-xs-12">
+					<form class="form-inline">
+						<div class="form-group">
+							<input type="email" class="form-control" id="emailField" placeholder="Enter email">
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control" id="passwordField" placeholder="Password">
+						</div>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="rememberMe"> Remember me
+							</label>
+						</div>
+						<button type="submit" class="btn btn-primary">Sign in</button>
+					</form>
+				</div>
+			</div>
+			<div class="page-header">
+				<h1>Form field classes <small>Use JavaScript to add/remove these</small></h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-md-6">
+					<form class="form">
+						<div class="form-group">
+							<label for="disabledField">Disabled Field</label>
+							<input type="text" class="form-control" id="disabledField" placeholder="Disabled" disabled />
+						</div>
+						<div class="form-group has-warning">
+							<label for="warningField">Warning Field</label>
+							<input type="text" class="form-control" id="warningField" placeholder="Warninng" />
+						</div>
+						<div class="form-group has-error">
+							<label for="errorField">Error Field</label>
+							<input type="text" class="form-control" id="errorField" placeholder="Error" />
+						</div>
+						<div class="form-group has-success">
+							<label for="successField">Success Field</label>
+							<input type="text" class="form-control" id="successField" placeholder="Success" />
+						</div>						
+						<div class="form-group">
+							<input class="form-control input-lg" type="text" placeholder="Larger Input Field">
+						</div>
+						<div class="form-group">
+							<input class="form-control input-sm" type="text" placeholder="Smaller Input Field">
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="reset" class="btn btn-default">Reset</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="js/jquery-2.1.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+	</body>
+</html>
+

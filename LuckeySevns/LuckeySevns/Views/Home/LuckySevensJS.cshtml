@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "LuckySevensJS";
+}
+
+<h2>LuckySevensJS</h2>
+
+<p>Starting Bet: <input type="text" id="amount" name="amount"/></p>
+<p><button id="playGame">Play</button></p>
+
+<div id="resultsTable">
+    <table>
+        <tbody>
+        <tr>
+            <td>Starting Bet</td>
+            <td><input type="text" id="StartingBet" readonly/></td>
+        </tr>
+        <tr>
+            <td>Total rolls before going broke</td>
+            <td><input type="text" id="TotalRolls" readonly/></td>
+        </tr>
+        <tr>
+            <td>Max Winnings</td>
+            <td><input type="text" id="MaxWinnings" readonly/></td>
+        </tr>
+        <tr>
+            <td>Max Rolled</td>
+            <td><input type="text" id="MaxRolled" readonly/></td>
+        </tr>
+        </tbody>
+    </table>
+    <button id="playAgain">PLay Again</button>
+</div>
+
+@section scripts
+{
+    <script src="~/scripts/App/WorkFlow.js"></script>
+}

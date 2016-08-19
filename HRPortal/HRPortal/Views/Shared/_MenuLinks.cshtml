@@ -1,0 +1,5 @@
+﻿@model List<HRPortal.Models.Data.Category>
+@foreach (var category in Model)
+{
+    <li>@Html.ActionLink(category.Name,"Policies","Policy",new {categoryId=category.CategoryId},null)</li>
+}

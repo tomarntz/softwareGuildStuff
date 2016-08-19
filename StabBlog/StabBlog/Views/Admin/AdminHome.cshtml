@@ -1,0 +1,212 @@
+﻿@using Microsoft.AspNet.Identity
+@using StabBlog.Models
+@model StabBlog.Models.ViewModels.AdminVM
+@{
+    ViewBag.Title = "AdminHome";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <p>@Html.ActionLink("Add Blog", "AddBlog", "Admin", null, new {@class = "btn btn-primary"})</p>
+            <p>@Html.ActionLink("Add A Category", "CreateNewCategory", "Post", null, new {@class="btn btn-primary"})</p>
+        <table class="table table-bordered table-striped ">
+            <thead>
+            <tr>
+                <th>Edit Blog</th>
+                <th>Author</th>
+                <th>Categories</th>
+                <th>Tags</th>
+                <th>Date Created</th>
+                <th>Date Modified</th>
+                <th>Post Status</th>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Owner"))
+                    {
+                        <th>Post/Delete</th>
+                    }
+                }
+
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var blog in Model.AllBlogs)
+            {
+                <tr>
+                    <td>@Html.ActionLink(blog.Title, "EditBlog", "Admin",new { id = blog.BlogId }, null)
+                    </td>
+                    <td>@blog.PostAuthor.FirstName  @blog.PostAuthor.LastName</td>
+                    <td>
+                        <ul>
+                            @foreach (var cat in blog.Categories)
+                            {
+                                <li>
+                                    @cat.CategoryName
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            @foreach (var tag in blog.Tags)
+                            {
+                                <li>
+                                    @tag.TagTitle
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                    <td>@blog.DateCreated</td>
+                    <td>@blog.DateLastModified</td>
+
+
+                    @if (blog.PostStatus)
+                    {
+                        <td style="background: green; background: rgba(0,128,0,0.4);">Posted</td>
+                    }
+                    else
+                    {
+                        <td style="background: rgb(255, 0, 0); background: rgba(255,0,0,0.4);">Pending</td>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Owner"))
+                    {
+                           
+                            <td>
+                                @Html.ActionLink("Post", "PostBlog", "Admin",new { id = blog.BlogId }, null) |
+                                @Html.ActionLink("Delete", "DeleteBlog", "Admin", new { id = blog.BlogId }, null)
+                            </td>
+                     }
+                }
+
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h2>Exhibits</h2>
+        <p>@Html.ActionLink("Add Exhibit", "AddExhibit", "Admin", null, new {@class = "btn btn-primary"})</p>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Edit Exhibit</th>
+                <th>Author</th>
+                <th>Post Status</th>
+                <th>Date Created</th>
+                <th>Date Modified</th>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Owner"))
+                    {
+                        <th>Post/Delete</th>
+                    }
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var exhibit in Model.AllExhibits)
+            {
+                <tr>
+                    <td>@Html.ActionLink(exhibit.Title, "EditExhibit", "Admin",
+                            new {id = exhibit.ExhibitId}, null)
+                    </td>
+                    <td>@exhibit.PostAuthor.FirstName  @exhibit.PostAuthor.LastName</td>
+                        @if (exhibit.PostStatus)
+                        {
+                            <td style="background: green; background: rgba(0,128,0,0.4);">Posted</td>
+                        }
+                        else
+                        {
+                            <td style="background: rgb(255, 0, 0); background: rgba(255,0,0,0.4);">Pending</td>
+                        }
+                    <td>@exhibit.DateCreated.ToShortDateString()</td>
+                    <td>@exhibit.DateLastModified</td>
+                    @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Owner"))
+                    {
+                            <td>
+                                @Html.ActionLink("Post", "PostExhibit", "Admin",
+                            new { id = exhibit.ExhibitId }, null) |
+                                @Html.ActionLink("Delete", "DeleteExhibit", "Admin",
+                            new { id = exhibit.ExhibitId }, null)
+                            </td>
+                        }
+                    }
+
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h2>Weapons</h2>
+        <p>@Html.ActionLink("Add Weapon", "AddWeapon", "Admin", null, new {@class = "btn btn-primary"})</p>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Edit Weapon</th>
+                <th>Author</th>
+                <th>Post Status</th>
+                <th>Date Created</th>
+                <th>Date Modified</th>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Owner"))
+                    {
+                        <th>Post/Delete</th>
+                    }
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var weapon in Model.AllWeapons)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(weapon.Title, "EditWeapon", "Admin",
+                            new {id = weapon.WeaponId}, null)
+                    </td>
+                    <td>@weapon.PostAuthor.FirstName @weapon.PostAuthor.LastName</td>
+                    @if (weapon.PostStatus == true)
+                    {
+                        <td class="posted" style="background: green; background: rgba(0,128,0,0.4);">Posted</td>
+                    }
+                    else
+                    {
+                        <td class="pending" style="background: rgb(255, 0, 0); background: rgba(255,0,0,0.4);">Pending</td>
+                    }
+                    <td>@weapon.DateCreated.Date</td>
+                    <td>@weapon.DateLastModified</td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Owner"))
+                        {
+                            <td>
+                                @Html.ActionLink("Post", "PostWeapon", "Admin",
+                                    new {id = weapon.WeaponId}, null) |
+                                @Html.ActionLink("Delete", "DeleteWeapon", "Admin",
+                                    new {id = weapon.WeaponId}, null)
+                            </td>
+                        }
+                    }
+
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="~/Content/app/LoginStyleSheet.css">
+}

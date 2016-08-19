@@ -1,0 +1,67 @@
+﻿@model Models.Blog
+@{
+    ViewBag.Title = "SingleBlogView";
+}
+
+<div class="row blogTop">
+    <div class="col-sm-6">
+        <h2 class="BlogHeader">@Model.Title</h2>
+    </div>
+
+    <div class="col-sm-6">
+        <img class="blogImage" src=@Model.ImagePath alt="blogImage" style="max-height: 500px; max-width: 100%"/>
+    </div>
+</div>
+
+<div class="row blogCenter">
+    <div class="col-sm-8 col-sm-offset-2">
+        <h4>@Html.Raw(Model.Content)</h4>
+    </div>
+</div>
+
+<div class="row BlogLinks">
+    <div class="col-xs-6">
+        <h4 class="underline">Categorys</h4>
+        <div class="tag">
+            @foreach (var category in Model.Categories)
+            {
+                <div class="tagContent">
+                    @Html.ActionLink(category.CategoryName, "CatView", "Blog", new {id = category.CategoryId}, new {@class = "blogcatLinkTags"})
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <div class="col-xs-6">
+        <h4 class="underline">Tags</h4>
+        <div class="tag">
+            @foreach (var tag in Model.Tags)
+            {
+                <div class="tagContent">
+                    @Html.ActionLink("#"+tag.TagTitle, "TagView", "Blog", new { id = tag.TagTitle }, new { @class = "blogcatLinkTags" })
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class="row blogBottom">
+    <div class="col-xs-3">
+        <p>This blog was written by <span class="autorStyle">@Model.PostAuthor.FirstName @Model.PostAuthor.LastName</span></p>
+        <p>Posted on @Model.DatePosted.Value.Month.@Model.DatePosted.Value.Day.@Model.DatePosted.Value.Year</p>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<h2>@Html.ActionLink("Return to Blog Archive", "BlogHome", "Blog")</h2>

@@ -1,0 +1,28 @@
+﻿@model Models.Exhibit
+@{
+    ViewBag.Title = "DeleteExhibit";
+}
+
+<h2>DeleteExhibit</h2>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Delete Exhibit</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(m => m.ExhibitId)
+            <p>Are you sure that you wish to delete the exhibit @Html.DisplayFor(m => m.ExhibitId)?</p>
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            @Html.ActionLink("Cancel", "AdminHome", "Admin", null, new { @class = "btn btn-sm btn-info" })
+        }
+    </div>
+</div>   
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="~/Content/app/LoginStyleSheet.css">
+}

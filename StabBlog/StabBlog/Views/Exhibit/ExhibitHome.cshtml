@@ -1,0 +1,73 @@
+﻿@model StabBlog.Models.ViewModels.ExhibitHomeVM
+@{
+    ViewBag.Title = "ExhibitHome";
+}
+
+<h2 class="Header">Historical Weaponry Guild Exhibits</h2>
+
+@foreach (var e in Model.AllExhibits)
+{
+    if (e.PostStatus == true)
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="exhibitInfo">
+
+                    <div class="row">
+                        
+                        <div class="col-sm-3">
+                            <img class="exhibitPhoto" src=@e.ImagePath style="height: 200px; width: 200px" alt="placeholder"/>
+                        </div>
+
+                        <h1 class="exhibitTitle col-sm-3">@Html.ActionLink(e.Title, "SingleExhibit", "Exhibit", new {id = e.ExhibitId}, null)</h1>
+
+                        <div class="exhibitHomeContent col-sm-3">
+                            <p class="exhibitContent ">@Html.Raw(e.Content)</p>
+                        </div>
+
+                        <div class="exhibitTags col-sm-3">
+                            <h4>Click to learn more.</h4>
+                            @if (e.Weapons == null)
+                            {
+                                <p>No weapons are involved in this exhibit</p>
+                            }
+                            else
+                            {
+                                <ul>
+                                    @foreach (var weapon in Model.AllWeapons)
+                                    {
+                                        if (weapon.ExhibitId == e.ExhibitId && weapon.PostStatus == true)
+                                        {
+                                            <li>@Html.ActionLink(weapon.Title, "WeaponPage", "Exhibit", new {id = weapon.WeaponId}, null)</li>
+                                        }
+                                        else if (weapon.ExhibitId == e.ExhibitId && weapon.PostStatus == false)
+                                        {
+                                            <li>@weapon.Title</li>
+                                        }
+                                    }
+                              
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <hr/>
+            </div>
+        </div>
+    }
+}
+
+@section scripts
+{
+<script src="~/Scripts/jquery.dotdotdot.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".exhibitHomeContent").dotdotdot();
+        })
+    </script>
+}

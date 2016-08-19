@@ -1,0 +1,10 @@
+﻿@model StabBlog.Models.AppModels.Post
+@{
+    ViewBag.Title = "DisplayPost";
+}
+
+<h2>DisplayPost</h2>
+
+<div class="row">
+    @Html.Raw(Model.Content)
+</div>

@@ -1,0 +1,81 @@
+﻿@model List<Models.Blog>
+@{
+    ViewBag.Title = "TagView";
+}
+
+<h2 class="Header">Results</h2>
+
+
+@foreach (var blog in Model)
+{
+    if (blog.PostStatus == true)
+    {
+        <div class="row">
+            <div class="col-lg-12 singleBlogPost">
+
+                <h3 class="blogTitle">@blog.Title</h3>
+
+                <div class="blogHomeContent">
+                    <p class="blogContent">@Html.Raw(blog.Content)</p>
+                    @(Html.ActionLink("READ MORE", "SingleBlogView", "Blog", new { id = blog.BlogId }, new { @class = "readmore" }))
+                </div>
+
+                <hr />
+
+                <div class="row blogRow">
+                    <div class="col-xs-4">
+                        <h4 class="underline">Categorys</h4>
+                        <div class="tag">
+                            @foreach (var category in blog.Categories)
+                            {
+                                if (blog.PostStatus == true)
+                                {
+                                    <div class="tagContent">
+                                        @Html.ActionLink(category.CategoryName, "CatView", "Blog", new { id = category.CategoryId }, new { @class = "catLinkTags" })
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <img src=@blog.ImagePath alt="image" style="height: 100px; width: auto" class="blogImage" />
+                    </div>
+
+
+                    <div class="col-xs-4">
+                        <h4 class="underline">#tags</h4>
+                        <div class="tag">
+                            @foreach (var tags in blog.Tags)
+                            {
+                                <div class="tagContent">@Html.ActionLink("#" + @tags.TagTitle, "TagView", "Blog", new { id = tags.TagTitle }, new { @class = "catLinkTags" })</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <hr />
+            </div>
+        </div>
+
+    }
+}
+
+<h2>@Html.ActionLink("Return to Blog Archive", "BlogHome", "Blog")</h2>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.dotdotdot.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+                $(".blogHomeContent").dotdotdot({
+                    after: "a.readmore"
+                });
+            })
+    </script>
+}

@@ -1,0 +1,65 @@
+﻿@model StabBlog.Models.ViewModels.SingleExhibitVM
+@{
+    ViewBag.Title = "SingleExhibit";
+}
+
+<div class="row exhibitTop">
+    <div class="col-xs-12">
+        <h2 class="Header">@Model.Exhibit.Title</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4 ExhibitImage">
+        <img src=@Model.Exhibit.ImagePath alt="exhibitImage" style="height: 400px; width: auto;" class="ExhibitInImage"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="singleExhibitPost col-sm-8 col-sm-offset-2">
+        <h4>@Html.Raw(Model.Exhibit.Content)</h4>
+    </div>
+</div>
+
+<div class="row blogBottom">
+    <div class="col-xs-3">
+        @*<p>This blog was written by <span class="autorStyle">@Model.Exhibit.PostAuthor.FirstName @Model.Exhibit.PostAuthor.LastName</span></p>*@
+        <p>Posted on @Model.Exhibit.DatePosted.Value.Month.@Model.Exhibit.DatePosted.Value.Day.@Model.Exhibit.DatePosted.Value.Year</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+                @if (Model.Exhibit.Weapons.Count == 0)
+                {
+                    <p>No weapons are involved in this exhibit</p>
+                }
+                else
+                {
+                    <h2 class="ExhibitHeader">Weapons in this exhibit</h2>
+                    <h4>Click on a link to learn more.</h4>
+
+                    foreach (var x in Model.Exhibit.Weapons)
+                    {
+                        foreach (var weapon in Model.WeaponsInExhibit)
+                        {
+                            if (weapon.ExhibitId == x.ExhibitId && weapon.PostStatus == true)
+                            {
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6">
+                                        <img class="exhibitPhoto "src="@weapon.ImagePath" alt="ExhibitImage" style="height: 300px; width: auto"/>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-6">
+                                        @Html.ActionLink(@weapon.Title, "WeaponPage", "Exhibit", new {id = weapon.WeaponId}, new {@class = "ExhibitHeader" })
+                                    </div>
+                                </div>
+                            }
+                        }
+                        break;
+                    }
+                }
+    </div>
+</div>
+
+<h2>@Html.ActionLink("Return to Exhibit Home Page", "ExhibitHome", "Exhibit")</h2>

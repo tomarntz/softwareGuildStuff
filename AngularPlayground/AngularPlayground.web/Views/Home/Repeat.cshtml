@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Repeat";
+}
+
+<h2>Repeat</h2>
+
+<div class="row" ng-app ng-init="primaryColors=['red','yellow','blue']">
+    <div class="col-sm-4">
+        <ul>
+            <li ng-repeat="color in primaryColors">{{color}}</li>
+        </ul>
+    </div>
+</div>

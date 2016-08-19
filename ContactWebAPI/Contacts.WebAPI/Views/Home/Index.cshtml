@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>My Contacts</h2>
+
+<div class="row">
+    <div class="col-xs-12">
+        @Html.Partial("_CreateContactModal")
+    </div>
+</div>
+<div class="row">
+    <h2>All Contacts</h2>
+    <table id="contacts" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Phone</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script src="~/scripts/app/webapi.js"></script>
+    <script src="~/scripts/app/createContact.js"></script>
+}

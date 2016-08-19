@@ -1,0 +1,28 @@
+﻿@model Models.Blog
+@{
+    ViewBag.Title = "PostBlog";
+}
+
+<h2>PostBlog</h2>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Post Blog</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(m => m.BlogId)
+            <p>Are you sureyou want to change the post status of @Html.DisplayFor(m => m.Title)?</p>
+            <button type="submit" class="btn btn-sm">Post</button>
+            @Html.ActionLink("Cancel", "AdminHome", "Admin", null, new { @class = "btn btn-sm btn-info" })
+        }
+    </div>
+</div>   
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="~/Content/app/LoginStyleSheet.css">
+}

@@ -1,0 +1,13 @@
+﻿@model LuckeySevns.Models.Player
+@{
+    ViewBag.Title = "Results";
+}
+
+<h2>Results</h2>
+
+<p>Your starting bet was @Html.DisplayFor(m => m.StartingBet)</p>
+<p>You rolled a toltal of @Html.DisplayFor(m => m.TimesRolled) times...</p>
+<p>Your highest winning total was @Html.DisplayFor(m => m.MaxWinnings)</p>
+<p>You rolled at your highest winnings a total of @Html.DisplayFor(m => m.MaxWinningsRolled) times...</p>
+
+<p>Would you like to play again? @Html.ActionLink("YES","LuckeySevensMVC","Home" )</p>

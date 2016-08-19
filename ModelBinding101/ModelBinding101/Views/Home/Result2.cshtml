@@ -1,0 +1,14 @@
+﻿@model ModelBinding101.Models.Person
+@{
+    ViewBag.Title = "Result2";
+}
+
+<h2>Result2</h2>
+
+
+<p>Person Id: @Model.PersonId</p>
+<p>First Name: @Model.FirstName</p>
+<p>Last Name: @Model.LastName</p>
+<p>City: @Model.HomeAddress.City</p>
+<p>State: @Model.HomeAddress.State</p>
+<p>ZipCode: @Model.HomeAddress.ZipCode</p>

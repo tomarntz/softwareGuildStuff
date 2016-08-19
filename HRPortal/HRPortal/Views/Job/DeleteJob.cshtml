@@ -1,0 +1,23 @@
+﻿@model HRPortal.Models.Data.Job
+@{
+    ViewBag.Title = "DeleteJob";
+}
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Delete Job</h3>
+        @Html.ActionLink("Return to Jobs", "Jobs", "Job")
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(m=>m.JobId)
+            <p>Are you sure you wish to delete the job @Html.DisplayFor(m => m.Position)</p>
+            <button type="submit" class="btn-group-sm btn-sm btn-danger">Delete</button>
+            @Html.ActionLink("Cancel","Jobs","Job",null,new {@class ="btn btn-sm btn-info"})
+        }
+    </div>
+</div>
