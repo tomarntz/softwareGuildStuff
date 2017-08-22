@@ -13,7 +13,6 @@ namespace BattleShip.UI
         public static void Main(string[] args)
         {
             GameWorkFlow gameWorkFlow = new GameWorkFlow();
-            AIWorkFlow AI = new AIWorkFlow();
             gameWorkFlow.Start();
             gameWorkFlow.SelectMode();
 

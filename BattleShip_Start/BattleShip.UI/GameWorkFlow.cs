@@ -15,8 +15,7 @@ namespace BattleShip.UI
 {
     public class GameWorkFlow
     {
-        AIWorkFlow AI = new AIWorkFlow();
-
+        ArtificialIntelligence AI = new ArtificialIntelligence();
         public void Start()
         {
             string a = ("Battleship");
@@ -118,63 +117,82 @@ namespace BattleShip.UI
         {
             bool isvalid = false;
             FireShotResponse response = null;
-            int xcord = 0;
-            int ycord = 0;
             ConsoleIO.BoardShotHistory(board);
-
-            while (!isvalid)
+            
+            if(playerName == "computer")
             {
-                Coordinate coordinate = ConsoleIO.PromptCoordinate( $"{playerName} Enter coordinate to fire shot");
-                response = board.FireShot(coordinate);
-                switch (response.ShotStatus)
+                while (!isvalid)
                 {
-                    case ShotStatus.Invalid:
-                        Console.Clear();
-                        ConsoleIO.BoardShotHistory(board);
-                        ConsoleIO.Display("Invalid");
-                        break;
-                    case ShotStatus.Duplicate:
-                        Console.Clear();
-                        ConsoleIO.BoardShotHistory(board);
-                        ConsoleIO.Display("Already shot there");
-                        break;
-                    case ShotStatus.Miss:
-                        Console.Clear();
-                        ConsoleIO.BoardShotHistory(board);
-                        ConsoleIO.Display("Miss");
-                        ConsoleIO.Display("select enter to continue");
-                        isvalid = true;
-                        break;
-                    case ShotStatus.Hit:
-                        Console.Clear();
-                        ConsoleIO.BoardShotHistory(board);
-                        ConsoleIO.Display("Hit");
-                        ConsoleIO.Display("select enter to continue");
-                        isvalid = true;
-                        break;
-                    case ShotStatus.HitAndSunk:
-                        Console.Clear();
-                        ConsoleIO.BoardShotHistory(board);
-                        ConsoleIO.Display("Hit and sunk");
-                        ConsoleIO.Display("select enter to continue");
-                        isvalid = true;
-                        break;
-                    case ShotStatus.Victory:
-                        Console.Clear();
-                        ConsoleIO.BoardShotHistory(board);
-                        ConsoleIO.Display($"{playerName} is the winner!");
-                        ConsoleIO.Display("select enter to continue");
-                        isvalid = true;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    switch (response.ShotStatus)
+                    {
+                        case ShotStatus.Hit:
+                            ConsoleIO.Display($"The AI hit your {response.ShipImpacted}");
+                            isvalid = true;
+                            break;
+                        case ShotStatus.HitAndSunk:
+                            isvalid = true;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                while (!isvalid)
+                {
+                    Coordinate coordinate = ConsoleIO.PromptCoordinate($"{playerName} Enter coordinate to fire shot");
+                    response = board.FireShot(coordinate);
+                    switch (response.ShotStatus)
+                    {
+                        case ShotStatus.Invalid:
+                            Console.Clear();
+                            ConsoleIO.BoardShotHistory(board);
+                            ConsoleIO.Display("Invalid");
+                            break;
+                        case ShotStatus.Duplicate:
+                            Console.Clear();
+                            ConsoleIO.BoardShotHistory(board);
+                            ConsoleIO.Display("Already shot there");
+                            break;
+                        case ShotStatus.Miss:
+                            Console.Clear();
+                            ConsoleIO.BoardShotHistory(board);
+                            ConsoleIO.Display("Miss");
+                            ConsoleIO.Display("select enter to continue");
+                            isvalid = true;
+                            break;
+                        case ShotStatus.Hit:
+                            Console.Clear();
+                            ConsoleIO.BoardShotHistory(board);
+                            ConsoleIO.Display("Hit");
+                            ConsoleIO.Display("select enter to continue");
+                            isvalid = true;
+                            break;
+                        case ShotStatus.HitAndSunk:
+                            Console.Clear();
+                            ConsoleIO.BoardShotHistory(board);
+                            ConsoleIO.Display("Hit and sunk");
+                            ConsoleIO.Display("select enter to continue");
+                            isvalid = true;
+                            break;
+                        case ShotStatus.Victory:
+                            Console.Clear();
+                            ConsoleIO.BoardShotHistory(board);
+                            ConsoleIO.Display($"{playerName} is the winner!");
+                            ConsoleIO.Display("select enter to continue");
+                            isvalid = true;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
             Console.ReadLine();
             return response;
         }
 
-        public static void TakeTurnsFiring(List<Player> Players)
+        public void TakeTurnsFiring(List<Player> Players)
         {
             FireShotResponse rs = new FireShotResponse();
             while (rs.ShotStatus != ShotStatus.Victory)

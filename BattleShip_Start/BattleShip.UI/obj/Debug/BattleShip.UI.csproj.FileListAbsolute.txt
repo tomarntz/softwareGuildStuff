@@ -1,0 +1,12 @@
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.csprojResolveAssemblyReference.cache
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.UI.exe.config
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.UI.exe
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.UI.pdb
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.BLL.dll
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\Battleship.Tests.dll
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\nunit.framework.dll
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.BLL.pdb
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\Battleship.Tests.pdb
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\nunit.framework.xml
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.exe
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.pdb

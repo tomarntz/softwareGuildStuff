@@ -6,14 +6,93 @@ using System.Threading.Tasks;
 using BattleShip.BLL.GameLogic;
 using BattleShip.BLL.Requests;
 using BattleShip.BLL.Responses;
+using BattleShip.BLL.Ships;
+
 
 namespace BattleShip.UI
 {
     public class ArtificialIntelligence
     {
         GameWorkFlow gameWF = new GameWorkFlow();
-        AIWorkFlow AIWF = new AIWorkFlow();
         static Random _random = new Random();
+
+        public void PlaceShips(Board board, string name)
+        {
+            foreach (ShipType shiptype in Enum.GetValues(typeof(ShipType)))
+            {
+                bool isVslidPlacement = false;
+                while (!isVslidPlacement)
+                {
+                    var request = new PlaceShipRequest();
+                    request.Coordinate = MakeCoordinate();
+                    request.Direction = GetDirection(request.Coordinate);
+                    request.ShipType = shiptype;
+                    ShipPlacement responce = board.PlaceShip(request);
+                    if (responce == ShipPlacement.Ok)
+                    {
+                        isVslidPlacement = true;
+                    }
+                }
+            }
+        }
+
+        public static FireShotResponse FireShot(Board board, string name)
+        {
+            bool isvalid = false;
+            FireShotResponse response = null;
+            ConsoleIO.BoardShotHistory(board);
+            while (!isvalid)
+            {
+                Coordinate coordinate = MakeCoordinate();
+                response = board.FireShot(coordinate);
+                switch (response.ShotStatus)
+                {
+                    case ShotStatus.Invalid:
+                        isvalid = false;
+                        break;
+                    case ShotStatus.Duplicate:
+                        isvalid = false;
+                        break;
+                    case ShotStatus.Miss:
+                        isvalid = true;
+                        break;
+                    case ShotStatus.Hit:
+                        isvalid = true;
+                        break;
+                    case ShotStatus.HitAndSunk:
+                        isvalid = true;
+                        break;
+                    case ShotStatus.Victory:
+                        isvalid = true;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            return response;
+        }
+
+        public string SelectDifficulty()
+        {
+            Console.WriteLine("Select your dificualty");
+            Console.WriteLine("1 for easy 2 for medium 3 for hard");
+            var dificulty = Console.ReadLine();
+            Console.Clear();
+            switch (dificulty)
+            {
+                case "1":
+                    EasyMode();
+                    return "1";
+                case "2":
+                    MediumMode();
+                    return "2";
+                case "3":
+                    HardMode();
+                    return "3";
+                default:
+                    return "";
+            }
+        }
 
         public static ShipDirection GetDirection(Coordinate coord)
         {
@@ -51,9 +130,9 @@ namespace BattleShip.UI
             Players.Add(Player2);
 
             gameWF.PlaceShip(Player1.Board, Player1.Name);
-            AIWF.PlaceShips(Player2.Board, Player2.Name);
+            PlaceShips(Player2.Board, Player2.Name);
 
-            AIWF.TakeTurnsWithAI(Players);
+            gameWF.TakeTurnsFiring(Players);
 
         }
 
