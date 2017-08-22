@@ -15,6 +15,8 @@ namespace BattleShip.UI
 {
     public class GameWorkFlow
     {
+        AIWorkFlow AI = new AIWorkFlow();
+
         public void Start()
         {
             string a = ("Battleship");
@@ -25,9 +27,50 @@ namespace BattleShip.UI
             Console.Clear();
         }
 
+        public void SelectMode()
+        {
+            Console.WriteLine("Would you like to play against a friend or the AI?");
+            Console.WriteLine("1 for friend 2 for AI");
+            var mode = Console.ReadLine();
+
+            if (mode == "2")
+            {
+                Console.WriteLine("AI it is!");
+                Console.ReadLine();
+                Console.Clear();
+                AI.SelectDifficulty();
+            }
+            else
+            {
+                PlayWithFriend();
+            }
+        }
+
+        public void PlayWithFriend()
+        {
+            List<Player> Players = new List<Player>();
+            Player Player1 = new Player();
+            Player Player2 = new Player();
+
+            Player1.Name = ConsoleIO.PromptString("Player 1 enter name", true);
+            Console.Clear();
+            Player2.Name = ConsoleIO.PromptString("Player 2 enter name", true);
+            Console.Clear();
+            Players.Add(Player1);
+            Players.Add(Player2);
+
+            foreach (var p in Players)
+            {
+                PlaceShip(p.Board, p.Name);
+                Console.Clear();
+
+            }
+            TakeTurnsFiring(Players);
+            //userinput = ConsoleIO.PlayAgain();
+        }
+
         public void PlaceShip(Board board, string playerName)
         {
-            ConsoleIO.Displaysetupboard(board);
             foreach (ShipType shiptype in Enum.GetValues(typeof(ShipType)))
             {
                 bool isvalidPlacement = false;
@@ -35,18 +78,29 @@ namespace BattleShip.UI
                 while (!isvalidPlacement)
                 {
                     var request = new PlaceShipRequest();
+                    ConsoleIO.Displaysetupboard(board);
                     request.Coordinate = ConsoleIO.PromptCoordinate($"{playerName} enter a coordinate to place your {shiptype}");
+                    Console.Clear();
+
+                    ConsoleIO.Displaysetupboard(board);
                     request.Direction = ConsoleIO.PromptDirection("");
+                    Console.Clear();
+
                     request.ShipType = shiptype;
                     ShipPlacement responce = board.PlaceShip(request);
                     switch (responce)
                     {
                         case ShipPlacement.NotEnoughSpace:
-                            ConsoleIO.Display("Not enough space");
+                            ConsoleIO.Displaysetupboard(board);
+                            ConsoleIO.Display("Not enough space hit enter to retry");
+                            Console.ReadLine();
                             Console.Clear();
                             break;
                         case ShipPlacement.Overlap:
-                            ConsoleIO.Display("Overlap");
+                            ConsoleIO.Displaysetupboard(board);
+                            ConsoleIO.Display("Overlap hit enter to retry");
+                            Console.ReadLine();
+                            Console.Clear();
                             break;
                         case ShipPlacement.Ok:
                             isvalidPlacement = true;
@@ -118,6 +172,26 @@ namespace BattleShip.UI
             }
             Console.ReadLine();
             return response;
+        }
+
+        public static void TakeTurnsFiring(List<Player> Players)
+        {
+            FireShotResponse rs = new FireShotResponse();
+            while (rs.ShotStatus != ShotStatus.Victory)
+            {
+                for (int i = 1; i < 3; i++)
+                {
+                    Player current = Players[i - 1];
+                    Player opponite = Players[i % 2];
+                    Console.Clear();
+                    rs = GameWorkFlow.FireShot(opponite.Board, current.Name);
+
+                    if (rs.ShotStatus == ShotStatus.Victory)
+                    {
+                        break;
+                    }
+                }
+            }
         }
     }
 }

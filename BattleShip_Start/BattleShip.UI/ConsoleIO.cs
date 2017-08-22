@@ -99,6 +99,8 @@ namespace BattleShip.UI
                     if (result == "")
                     {
                         Display("Input is required");
+                        Console.ReadLine();
+                        Console.Clear();
                     }
                 } while (result == "");
             }
@@ -109,7 +111,7 @@ namespace BattleShip.UI
             }
             return result;
         }
-
+        //place a delay after user does turn to make it seem like the AI is thinking and actually playing rather than just 
         public static Coordinate PromptCoordinate(string message)
         {
             bool isvalid = false;
@@ -149,6 +151,7 @@ namespace BattleShip.UI
             {
                 Console.WriteLine();
                 string direction = PromptOptions("Please enter a direction 1 = up, 2 = down, 3 = left, 4 = right", new []{"1","2","3","4"});
+                Console.Clear();
                 int dir = 0;
                 if (Int32.TryParse(direction, out dir) && dir >= 1 && dir <= 4)
                 {

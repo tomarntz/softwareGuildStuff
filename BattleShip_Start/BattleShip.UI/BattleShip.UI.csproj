@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AIWorkFlow.cs" />
+    <Compile Include="ArtificialIntelligence.cs" />
     <Compile Include="ConsoleIO.cs" />
     <Compile Include="GameWorkFlow.cs" />
     <Compile Include="Player.cs" />

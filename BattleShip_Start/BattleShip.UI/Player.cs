@@ -7,7 +7,7 @@ using BattleShip.BLL.GameLogic;
 
 namespace BattleShip.UI
 {
-    class Player
+    public class Player
     {
         public Player()
         {
