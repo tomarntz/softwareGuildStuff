@@ -79,6 +79,12 @@ namespace BattleShip.UI
                     var request = new PlaceShipRequest();
                     ConsoleIO.Displaysetupboard(board);
                     request.Coordinate = ConsoleIO.PromptCoordinate($"{playerName} enter a coordinate to place your {shiptype}");
+                    
+                    if(request.Coordinate.XCoordinate == 69 || request.Coordinate.XCoordinate == 69)
+                    {
+                        ArtificialIntelligence.PlaceShips(board, playerName);
+                    }
+
                     Console.Clear();
 
                     ConsoleIO.Displaysetupboard(board);

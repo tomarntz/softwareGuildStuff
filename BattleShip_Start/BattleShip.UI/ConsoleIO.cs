@@ -18,6 +18,7 @@ namespace BattleShip.UI
 
         public static void Displaysetupboard(Board board)
         {
+            Console.Clear();
             Console.Write("{0,3}", " ");
             for (char letter = 'A'; letter < 'K'; letter++)
             {
@@ -48,6 +49,7 @@ namespace BattleShip.UI
 
         public static void DisplayAIBoardShotHistory(Board board)
         {
+            Console.Clear();
             Console.Write("{0,3}", " ");
             for (char letter = 'A'; letter < 'K'; letter++)
             {
@@ -60,6 +62,14 @@ namespace BattleShip.UI
                 for (int j = 1; j < 11; j++)
                 {
                     string a = "-";
+                    var resultShips = from s in board.GetShips()
+                                      where s != null && s.BoardPositions.Any(b => b.XCoordinate == j && b.YCoordinate == i)
+                                      select s;
+                    if (resultShips.Count() > 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        a = "S";
+                    }
                     if (board.ShotHistory.ContainsKey(new Coordinate(j, i)))
                     {
                         ShotHistory result = board.ShotHistory[new Coordinate(j, i)];
@@ -79,14 +89,6 @@ namespace BattleShip.UI
                                 break;
                         }
                     }
-                    var resultShips = from s in board.GetShips()
-                                 where s != null && s.BoardPositions.Any(b => b.XCoordinate == j && b.YCoordinate == i)
-                                 select s;
-                    if (resultShips.Count() > 0)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        a = "S";
-                    }
                     Console.Write("{0,-4}", a);
                     Console.ResetColor();
                 }
@@ -97,6 +99,7 @@ namespace BattleShip.UI
 
         public static void BoardShotHistory(Board board)
         {
+            Console.Clear();
             Console.Write("{0,3}", " ");
             for (char letter = 'A'; letter < 'K'; letter++)
             {
@@ -181,7 +184,7 @@ namespace BattleShip.UI
                 Int32.TryParse(number, out ycord);
                 xcord = Convert.ToInt16(letter.ToUpper()[0]) - 64;
                
-                isvalid = (xcord >= 1 && xcord <= 10) && (ycord >= 1 && ycord <= 10);
+                isvalid = ((xcord >= 1 && xcord <= 10) && (ycord >= 1 && ycord <= 10) || ycord == 69 || xcord ==69);
                 if (!isvalid)
                 {
                     Display("Invalid");
