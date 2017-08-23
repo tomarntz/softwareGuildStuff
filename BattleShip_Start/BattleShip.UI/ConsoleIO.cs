@@ -46,6 +46,55 @@ namespace BattleShip.UI
             Console.WriteLine();
         }
 
+        public static void DisplayAIBoardShotHistory(Board board)
+        {
+            Console.Write("{0,3}", " ");
+            for (char letter = 'A'; letter < 'K'; letter++)
+            {
+                Console.Write("{0,-4}", letter);
+            }
+            Console.WriteLine("");
+            for (int i = 1; i < 11; i++)
+            {
+                Console.Write("{0,-3}", i);
+                for (int j = 1; j < 11; j++)
+                {
+                    string a = "-";
+                    if (board.ShotHistory.ContainsKey(new Coordinate(j, i)))
+                    {
+                        ShotHistory result = board.ShotHistory[new Coordinate(j, i)];
+                        switch (result)
+                        {
+                            case ShotHistory.Hit:
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                a = "H";
+                                break;
+                            case ShotHistory.Miss:
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                a = "M";
+                                break;
+                            case ShotHistory.Unknown:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    var resultShips = from s in board.GetShips()
+                                 where s != null && s.BoardPositions.Any(b => b.XCoordinate == j && b.YCoordinate == i)
+                                 select s;
+                    if (resultShips.Count() > 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        a = "S";
+                    }
+                    Console.Write("{0,-4}", a);
+                    Console.ResetColor();
+                }
+                Console.WriteLine("");
+            }
+            Console.WriteLine();
+        }
+
         public static void BoardShotHistory(Board board)
         {
             Console.Write("{0,3}", " ");

@@ -15,7 +15,7 @@ namespace BattleShip.UI
 {
     public class GameWorkFlow
     {
-        ArtificialIntelligence AI = new ArtificialIntelligence();
+       // ArtificialIntelligence AI = new ArtificialIntelligence();
         public void Start()
         {
             string a = ("Battleship");
@@ -37,7 +37,7 @@ namespace BattleShip.UI
                 Console.WriteLine("AI it is!");
                 Console.ReadLine();
                 Console.Clear();
-                AI.SelectDifficulty();
+                ArtificialIntelligence.SelectDifficulty();
             }
             else
             {
@@ -68,7 +68,7 @@ namespace BattleShip.UI
             //userinput = ConsoleIO.PlayAgain();
         }
 
-        public void PlaceShip(Board board, string playerName)
+        public static void PlaceShip(Board board, string playerName)
         {
             foreach (ShipType shiptype in Enum.GetValues(typeof(ShipType)))
             {
@@ -123,13 +123,28 @@ namespace BattleShip.UI
             {
                 while (!isvalid)
                 {
+                    Coordinate coordinate = ArtificialIntelligence.MakeCoordinate();
+                    response = board.FireShot(coordinate);
                     switch (response.ShotStatus)
                     {
+                        case ShotStatus.Miss:
+                            ConsoleIO.DisplayAIBoardShotHistory(board);
+                            ConsoleIO.Display($"The AI fired and missed your ships");
+                            isvalid = true;
+                            break;
                         case ShotStatus.Hit:
+                            ConsoleIO.DisplayAIBoardShotHistory(board);
                             ConsoleIO.Display($"The AI hit your {response.ShipImpacted}");
                             isvalid = true;
                             break;
                         case ShotStatus.HitAndSunk:
+                            ConsoleIO.DisplayAIBoardShotHistory(board);
+                            ConsoleIO.Display($"The AI hit and sunk your {response.ShipImpacted}");
+                            isvalid = true;
+                            break;
+                        case ShotStatus.Victory:
+                            ConsoleIO.DisplayAIBoardShotHistory(board);
+                            ConsoleIO.Display($"The AI sunk your last ship you are the loser");
                             isvalid = true;
                             break;
                         default:
@@ -192,7 +207,7 @@ namespace BattleShip.UI
             return response;
         }
 
-        public void TakeTurnsFiring(List<Player> Players)
+        public static void TakeTurnsFiring(List<Player> Players)
         {
             FireShotResponse rs = new FireShotResponse();
             while (rs.ShotStatus != ShotStatus.Victory)

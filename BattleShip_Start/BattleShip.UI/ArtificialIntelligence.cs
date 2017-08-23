@@ -13,10 +13,9 @@ namespace BattleShip.UI
 {
     public class ArtificialIntelligence
     {
-        GameWorkFlow gameWF = new GameWorkFlow();
         static Random _random = new Random();
 
-        public void PlaceShips(Board board, string name)
+        public static void PlaceShips(Board board, string name)
         {
             foreach (ShipType shiptype in Enum.GetValues(typeof(ShipType)))
             {
@@ -72,7 +71,7 @@ namespace BattleShip.UI
             return response;
         }
 
-        public string SelectDifficulty()
+        public static void SelectDifficulty()
         {
             Console.WriteLine("Select your dificualty");
             Console.WriteLine("1 for easy 2 for medium 3 for hard");
@@ -82,15 +81,15 @@ namespace BattleShip.UI
             {
                 case "1":
                     EasyMode();
-                    return "1";
+                    break;
                 case "2":
                     MediumMode();
-                    return "2";
+                    break;
                 case "3":
                     HardMode();
-                    return "3";
+                    break;
                 default:
-                    return "";
+                    break;
             }
         }
 
@@ -112,7 +111,7 @@ namespace BattleShip.UI
             return coord;
         }
 
-        public void EasyMode()
+        public static void EasyMode()
         {
             Console.WriteLine("Panzy hit enter to continue");
             Console.ReadLine();
@@ -129,19 +128,19 @@ namespace BattleShip.UI
             Players.Add(Player1);
             Players.Add(Player2);
 
-            gameWF.PlaceShip(Player1.Board, Player1.Name);
+            GameWorkFlow.PlaceShip(Player1.Board, Player1.Name);
             PlaceShips(Player2.Board, Player2.Name);
 
-            gameWF.TakeTurnsFiring(Players);
+            GameWorkFlow.TakeTurnsFiring(Players);
 
         }
 
-        public void MediumMode()
+        public static void MediumMode()
         {
 
         }
 
-        public void HardMode()
+        public static void HardMode()
         {
 
         }
