@@ -71,6 +71,43 @@ namespace BattleShip.UI
             return response;
         }
 
+        
+
+        public static ShipDirection GetDirection(Coordinate coord)
+        {
+            ShipDirection result = ShipDirection.Up;
+            int dir = _random.Next(0, 5);
+            result = (ShipDirection)(dir - 1);
+            return result;
+        }
+
+        public static Coordinate MakeCoordinate()
+        {
+
+            int xcord = _random.Next(0, 11);
+            int ycord = _random.Next(0, 11);
+
+            Coordinate coord = new Coordinate(xcord, ycord);
+            return coord;
+        }
+
+        public static List<Player> PrepareMatchAgainstAI()
+        {
+            List<Player> players = ConsoleIO.PromptName();
+            foreach (Player player in players)
+            {
+                if (player.Name == "computer")
+                {
+                    PlaceShips(player.Board, player.Name);
+                }
+                else
+                {
+                    GameWorkFlow.PlaceShip(player.Board, player.Name);
+                }
+            }
+            return players;
+        }
+
         public static void SelectDifficulty()
         {
             Console.WriteLine("Select your dificualty");
@@ -93,46 +130,12 @@ namespace BattleShip.UI
             }
         }
 
-        public static ShipDirection GetDirection(Coordinate coord)
-        {
-            ShipDirection result = ShipDirection.Up;
-            int dir = _random.Next(0, 5);
-            result = (ShipDirection)(dir - 1);
-            return result;
-        }
-
-        public static Coordinate MakeCoordinate()
-        {
-
-            int xcord = _random.Next(0, 11);
-            int ycord = _random.Next(0, 11);
-
-            Coordinate coord = new Coordinate(xcord, ycord);
-            return coord;
-        }
-
         public static void EasyMode()
         {
             Console.WriteLine("Panzy hit enter to continue");
             Console.ReadLine();
-
-            List<Player> Players = new List<Player>();
-            Player Player1 = new Player();
-            Player Player2 = new Player();
-
-            Player1.Name = ConsoleIO.PromptString("Enter your name.", true);
-            Console.Clear();
-            Player2.Name = ("computer");
-            Console.Clear();
-
-            Players.Add(Player1);
-            Players.Add(Player2);
-
-            GameWorkFlow.PlaceShip(Player1.Board, Player1.Name);
-            PlaceShips(Player2.Board, Player2.Name);
-
-            GameWorkFlow.TakeTurnsFiring(Players);
-
+            List<Player> players = PrepareMatchAgainstAI();
+            GameWorkFlow.TakeTurnsFiring(players);
         }
 
         public static void MediumMode()
@@ -142,8 +145,17 @@ namespace BattleShip.UI
 
         public static void HardMode()
         {
+            ConsoleIO.Display("Hard mode selected");
+            Console.ReadLine();
+            List<Player> players = PrepareMatchAgainstAI();
+            GameWorkFlow.TakeTurnsFiring(players);
 
         }
 
+        public static Coordinate SelectCoordinateOneHit(Board board)
+        {
+
+        }
+        //method for one hit
     }
 }

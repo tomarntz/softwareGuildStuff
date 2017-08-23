@@ -233,6 +233,40 @@ namespace BattleShip.UI
             return result;
         }
 
+        public static void PromptDifficulty()
+        {
+            Console.WriteLine("Select your dificualty");
+            Console.WriteLine("1 for easy 2 for medium 3 for hard");
+            var dificulty = Console.ReadLine();
+            Console.Clear();
+            switch (dificulty)
+            {
+                case "1":
+                    ArtificialIntelligence.EasyMode();
+                    break;
+                case "2":
+                    ArtificialIntelligence.MediumMode();
+                    break;
+                case "3":
+                    ArtificialIntelligence.HardMode();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public static List<Player> PromptName()
+        {
+            List<Player> Players = new List<Player>();
+            Player Player1 = new Player();
+            Player Player2 = new Player();
+
+            Player1.Name = PromptString("Enter your name.", true);
+            Console.Clear();
+            Player2.Name = ("computer");
+            return Players;
+        }
+
         public static bool PlayAgain()
         {
             bool isValid = false;

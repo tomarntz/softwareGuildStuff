@@ -129,7 +129,19 @@ namespace BattleShip.UI
             {
                 while (!isvalid)
                 {
-                    Coordinate coordinate = ArtificialIntelligence.MakeCoordinate();
+                    //if last shot was a hit go to selectcoordinatonhit
+                    foreach(ShotHistory shot in board.ShotHistory)
+                    {
+
+                    }
+                    if(board.ShotHistory == Hit)
+                    {
+                        ArtificialIntelligence.SelectCoordinateOnHit(board);
+                    }
+                    else
+                    {
+                        Coordinate coordinate = ArtificialIntelligence.MakeCoordinate();
+                    }
                     response = board.FireShot(coordinate);
                     switch (response.ShotStatus)
                     {
