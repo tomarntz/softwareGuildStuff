@@ -11,7 +11,7 @@ namespace BattleShip.BLL.GameLogic
 {
     public class Brain
     {
-        public SortedDictionary<int, Coordinate> HitShots;
+        public List<Coordinate> HitShots;
         public bool FoundShip;
         public bool FoundShipDirection;
 

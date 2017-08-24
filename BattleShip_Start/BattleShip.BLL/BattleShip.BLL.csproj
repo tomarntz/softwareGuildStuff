@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="GameLogic\AIBoard.cs" />
     <Compile Include="GameLogic\Board.cs" />
+    <Compile Include="GameLogic\Brain.cs" />
     <Compile Include="GameLogic\ShipCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requests\Coordinate.cs" />

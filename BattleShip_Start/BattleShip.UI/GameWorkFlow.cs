@@ -133,11 +133,12 @@ namespace BattleShip.UI
                     //if last shot was a hit go to selectcoordinatonhit
 
                     var lastShot = board.ShotHistory.Last();
-
+                    
+                    //this should be if any of the last 4 shots were a hit
                     if (lastShot.Value == ShotHistory.Hit)
                     {
-                        hits.HitShots.Add()
-                        ArtificialIntelligence.CalculateWhereToFireNext(board);
+                        hits.HitShots.Add(lastShot.Key);
+                        ArtificialIntelligence.CalculateWhereToFireNext(board, hits);
                     }
                     else
                     {

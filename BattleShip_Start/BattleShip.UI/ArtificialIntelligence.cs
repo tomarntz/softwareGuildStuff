@@ -152,9 +152,10 @@ namespace BattleShip.UI
 
         }
 
-        public static Coordinate CalculateWhereToFireNext(Board board)
+        public static Coordinate CalculateWhereToFireNext(Board board, Brain brain)
         {
-            var lastHit = 
+            var lastHit = brain.HitShots.Last();
+
             ShotHistory status = board.ShotHistory.Last().Value;
             if(status == ShotHistory.Hit)
             {
