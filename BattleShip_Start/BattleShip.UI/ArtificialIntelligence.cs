@@ -152,10 +152,27 @@ namespace BattleShip.UI
 
         }
 
-        public static Coordinate SelectCoordinateOneHit(Board board)
+        public static Coordinate CalculateWhereToFireNext(Board board)
         {
+            var lastHit = 
+            ShotHistory status = board.ShotHistory.Last().Value;
+            if(status == ShotHistory.Hit)
+            {
 
+            }
         }
-        //method for one hit
+
+        public static Coordinate Add1ToXAxis(Board board)
+        {
+            Coordinate lastHit = board.ShotHistory.Last().Key;
+            Coordinate cordToReturn = lastHit;
+            if (lastHit.XCoordinate < 10 || lastHit.XCoordinate > 1)
+            {
+                lastHit.XCoordinate++;
+            }
+            cordToReturn.XCoordinate = lastHit.XCoordinate;
+            cordToReturn.XCoordinate = lastHit.YCoordinate;
+            return cordToReturn;
+        }
     }
 }

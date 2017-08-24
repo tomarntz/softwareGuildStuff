@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameLogic\AIBoard.cs" />
     <Compile Include="GameLogic\Board.cs" />
     <Compile Include="GameLogic\ShipCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

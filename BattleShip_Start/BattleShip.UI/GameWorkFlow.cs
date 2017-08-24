@@ -121,6 +121,7 @@ namespace BattleShip.UI
 
         public static FireShotResponse FireShot(Board board, string playerName)
         {
+            Brain hits = new Brain();
             bool isvalid = false;
             FireShotResponse response = null;
             ConsoleIO.BoardShotHistory(board);
@@ -130,19 +131,19 @@ namespace BattleShip.UI
                 while (!isvalid)
                 {
                     //if last shot was a hit go to selectcoordinatonhit
-                    foreach(ShotHistory shot in board.ShotHistory)
-                    {
 
-                    }
-                    if(board.ShotHistory == Hit)
+                    var lastShot = board.ShotHistory.Last();
+
+                    if (lastShot.Value == ShotHistory.Hit)
                     {
-                        ArtificialIntelligence.SelectCoordinateOnHit(board);
+                        hits.HitShots.Add()
+                        ArtificialIntelligence.CalculateWhereToFireNext(board);
                     }
                     else
                     {
                         Coordinate coordinate = ArtificialIntelligence.MakeCoordinate();
+                        response = board.FireShot(coordinate);
                     }
-                    response = board.FireShot(coordinate);
                     switch (response.ShotStatus)
                     {
                         case ShotStatus.Miss:
