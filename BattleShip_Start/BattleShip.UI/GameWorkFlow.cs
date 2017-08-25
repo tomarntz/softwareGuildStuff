@@ -15,7 +15,8 @@ namespace BattleShip.UI
 {
     public class GameWorkFlow
     {
-       // ArtificialIntelligence AI = new ArtificialIntelligence();
+        static Brain brain = new Brain();
+        // ArtificialIntelligence AI = new ArtificialIntelligence();
         public void Start()
         {
             string a = ("Battleship");
@@ -121,7 +122,6 @@ namespace BattleShip.UI
 
         public static FireShotResponse FireShot(Board board, string playerName)
         {
-            Brain hits = new Brain();
             bool isvalid = false;
             FireShotResponse response = null;
             ConsoleIO.BoardShotHistory(board);
@@ -130,16 +130,19 @@ namespace BattleShip.UI
             {
                 while (!isvalid)
                 {
-                    //if last shot was a hit go to selectcoordinatonhit
-
                     var lastShot = board.ShotHistory.Last();
-                    
-                    //this should be if any of the last 4 shots were a hit
-                    if (lastShot.Value == ShotHistory.Hit)
+                    //if last shot was a hit or if AI is tring to find a ships direction
+                    if (lastShot.Value == ShotHistory.Hit || brain.CurrentlyFiringAtShip == true )
                     {
-                        hits.HitShots.Add(lastShot.Key);
-                        ArtificialIntelligence.CalculateWhereToFireNext(board, hits);
+                        if(lastShot.Value == ShotHistory.Hit)
+                        {
+                            brain.HitShots.Add(lastShot.Key);
+                            brain.CurrentlyFiringAtShip = true;
+                        }
+                        Coordinate calcedCord = ArtificialIntelligence.CalculateWhereToFireNext(board, brain);
+                        response = board.FireShot(calcedCord);
                     }
+                    //otherwise select a random coord
                     else
                     {
                         Coordinate coordinate = ArtificialIntelligence.MakeCoordinate();

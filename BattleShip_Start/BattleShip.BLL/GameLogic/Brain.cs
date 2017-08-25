@@ -14,6 +14,6 @@ namespace BattleShip.BLL.GameLogic
         public List<Coordinate> HitShots;
         public bool FoundShip;
         public bool FoundShipDirection;
-
+        public bool CurrentlyFiringAtShip;
     }
 }

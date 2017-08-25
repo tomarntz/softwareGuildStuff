@@ -26,6 +26,15 @@ namespace BattleShip.BLL.GameLogic
             return _ships;
         }
 
+        public bool HasCordBeenFiredAt(Coordinate cord)
+        {
+            if (ShotHistory.ContainsKey(cord))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public FireShotResponse FireShot(Coordinate coordinate)
         {
             var response = new FireShotResponse();

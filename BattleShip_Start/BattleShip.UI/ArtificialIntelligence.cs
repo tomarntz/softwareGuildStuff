@@ -154,19 +154,46 @@ namespace BattleShip.UI
 
         public static Coordinate CalculateWhereToFireNext(Board board, Brain brain)
         {
+            
             var lastHit = brain.HitShots.Last();
 
-            ShotHistory status = board.ShotHistory.Last().Value;
-            if(status == ShotHistory.Hit)
+            //right to last hit
+            Coordinate right = lastHit;
+            right.XCoordinate = lastHit.XCoordinate++;
+            if(board.HasCordBeenFiredAt(right) == false)
             {
+                return right;
+            }
 
+            //left to last hit
+            Coordinate left = lastHit;
+            left.XCoordinate = lastHit.XCoordinate--;
+            if (board.HasCordBeenFiredAt(left) == false)
+            {
+                return left;
+            }
+
+            //up to last hit
+            Coordinate up = lastHit;
+            up.YCoordinate = lastHit.YCoordinate++;
+            if (board.HasCordBeenFiredAt(up) == false)
+            {
+                return up;
+            }
+
+            //down to last hit
+            Coordinate down = lastHit;
+            down.YCoordinate = lastHit.YCoordinate--;
+            if (board.HasCordBeenFiredAt(down) == false)
+            {
+                return down;
             }
         }
 
-        public static Coordinate Add1ToXAxis(Board board)
+        public static Coordinate Right(Coordinate lastHit)
         {
-            Coordinate lastHit = board.ShotHistory.Last().Key;
-            Coordinate cordToReturn = lastHit;
+
+
             if (lastHit.XCoordinate < 10 || lastHit.XCoordinate > 1)
             {
                 lastHit.XCoordinate++;
