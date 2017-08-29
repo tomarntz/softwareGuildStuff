@@ -119,9 +119,6 @@ namespace BattleShip.UI
                 case "1":
                     EasyMode();
                     break;
-                case "2":
-                    MediumMode();
-                    break;
                 case "3":
                     HardMode();
                     break;
@@ -138,11 +135,6 @@ namespace BattleShip.UI
             GameWorkFlow.TakeTurnsFiring(players);
         }
 
-        public static void MediumMode()
-        {
-
-        }
-
         public static void HardMode()
         {
             ConsoleIO.Display("Hard mode selected");
@@ -152,39 +144,77 @@ namespace BattleShip.UI
 
         }
 
-        public static Coordinate CalculateWhereToFireNext(Board board, Brain brain)
+        public static Coordinate CalcShot(Board board, Brain brain)
         {
-            
+            var lastShot = board.ShotHistory.Last();
+            if (brain.FoundShipDirection == true)
+            {
+                Coordinate cord = FoundDirectionCalcShot(board, brain);
+                return cord;
+            }
+            if(brain.FoundShipDirection == false && brain.FoundShip == true)
+            {
+                Coordinate cord = FoundShipCalcDirection(board, brain);
+                return cord;
+            }
+            Coordinate randomCord = MakeCoordinate();
+            return randomCord;
+        }
+
+        public static Coordinate FoundDirectionCalcShot(Board board, Brain brain)
+        {
+            Coordinate lastHit = brain.HitShots.Last();
+            Coordinate secLast = brain.HitShots[brain.HitShots.Count - 2];
+
+            if (brain.FoundEndOfShip == true)
+            {
+
+            }
+
+            if(lastHit.XCoordinate == secLast.XCoordinate)
+            {
+                if(brain.FoundEndOfShip == true)
+                {
+
+                }
+                lastHit.YCoordinate++;
+                return lastHit;
+            }
+            if (lastHit.YCoordinate == secLast.YCoordinate)
+            {
+                lastHit.XCoordinate++;
+                return lastHit;
+            }
+        }
+
+        public static Coordinate FoundShipCalcDirection(Board board, Brain brain)
+        {
             var lastHit = brain.HitShots.Last();
 
             //right to last hit
-            Coordinate right = lastHit;
-            right.XCoordinate = lastHit.XCoordinate++;
-            if(board.HasCordBeenFiredAt(right) == false)
+            Coordinate right = Right(lastHit);
+            if(board.HasCordBeenFiredAt(right) == false && board.IsValidCoordinate(right) == true)
             {
                 return right;
             }
 
             //left to last hit
-            Coordinate left = lastHit;
-            left.XCoordinate = lastHit.XCoordinate--;
-            if (board.HasCordBeenFiredAt(left) == false)
+            Coordinate left = Left(lastHit);
+            if (board.HasCordBeenFiredAt(left) == false && board.IsValidCoordinate(right) == true)
             {
                 return left;
             }
 
             //up to last hit
-            Coordinate up = lastHit;
-            up.YCoordinate = lastHit.YCoordinate++;
-            if (board.HasCordBeenFiredAt(up) == false)
+            Coordinate up = Up(lastHit);
+            if (board.HasCordBeenFiredAt(up) == false && board.IsValidCoordinate(right) == true)
             {
                 return up;
             }
 
             //down to last hit
-            Coordinate down = lastHit;
-            down.YCoordinate = lastHit.YCoordinate--;
-            if (board.HasCordBeenFiredAt(down) == false)
+            Coordinate down = Down(lastHit);
+            if (board.HasCordBeenFiredAt(down) == false && board.IsValidCoordinate(right) == true)
             {
                 return down;
             }
@@ -192,15 +222,26 @@ namespace BattleShip.UI
 
         public static Coordinate Right(Coordinate lastHit)
         {
+            lastHit.XCoordinate++;
+            return lastHit;
+        }
 
+        public static Coordinate Left(Coordinate lastHit)
+        {
+            lastHit.XCoordinate--;
+            return lastHit;
+        }
 
-            if (lastHit.XCoordinate < 10 || lastHit.XCoordinate > 1)
-            {
-                lastHit.XCoordinate++;
-            }
-            cordToReturn.XCoordinate = lastHit.XCoordinate;
-            cordToReturn.XCoordinate = lastHit.YCoordinate;
-            return cordToReturn;
+        public static Coordinate Up(Coordinate lastHit)
+        {
+            lastHit.YCoordinate--;
+            return lastHit;
+        }
+
+        public static Coordinate Down(Coordinate lastHit)
+        {
+            lastHit.YCoordinate++;
+            return lastHit;
         }
     }
 }

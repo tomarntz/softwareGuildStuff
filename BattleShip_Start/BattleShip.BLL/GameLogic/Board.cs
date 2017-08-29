@@ -26,6 +26,8 @@ namespace BattleShip.BLL.GameLogic
             return _ships;
         }
 
+
+
         public bool HasCordBeenFiredAt(Coordinate cord)
         {
             if (ShotHistory.ContainsKey(cord))
@@ -106,7 +108,7 @@ namespace BattleShip.BLL.GameLogic
             }
         }
 
-        private bool IsValidCoordinate(Coordinate coordinate)
+        public bool IsValidCoordinate(Coordinate coordinate)
         {
             return coordinate.XCoordinate >= 1 && coordinate.XCoordinate <= 10 &&
             coordinate.YCoordinate >= 1 && coordinate.YCoordinate <= 10;
