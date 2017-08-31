@@ -146,7 +146,11 @@ namespace BattleShip.UI
 
         public static Coordinate CalcShot(Board board, Brain brain)
         {
-            var lastShot = board.ShotHistory.Last();
+            if(brain.FoundEndOfShip == true)
+            {
+                Coordinate cord = FoundEndOfShipCalcShot(board, brain);
+                return cord;
+            }
             if (brain.FoundShipDirection == true)
             {
                 Coordinate cord = FoundDirectionCalcShot(board, brain);
@@ -161,18 +165,48 @@ namespace BattleShip.UI
             return randomCord;
         }
 
+        public static Coordinate FoundEndOfShipCalcShot(Board board, Brain brain)
+        {
+            Coordinate startingPoint = brain.InitialHitOfShip;
+            if(brain.HitShotsDecreasing == null)
+            {
+                if(brain.ShipOnX == true)
+                {
+                    startingPoint.YCoordinate--;
+                    return startingPoint;
+                }
+                else
+                {
+                    startingPoint.XCoordinate--;
+                    return startingPoint;
+                }
+            }
+            else
+            {
+                var lastHit = brain.HitShotsDecreasing.Last();
+
+                if (brain.ShipOnX == true)
+                {
+                    lastHit.YCoordinate--;
+                    return startingPoint;
+                }
+                else
+                {
+                    lastHit.XCoordinate--;
+                    return startingPoint;
+                }
+            }
+
+        }
+
         public static Coordinate FoundDirectionCalcShot(Board board, Brain brain)
         {
-            Coordinate lastHit = brain.HitShots.Last();
-            Coordinate secLast = brain.HitShots[brain.HitShots.Count - 2];
-
-            if (brain.FoundEndOfShip == true)
-            {
-
-            }
+            Coordinate lastHit = brain.HitShotsIncreasing.Last();
+            Coordinate secLast = brain.HitShotsIncreasing[brain.HitShotsIncreasing.Count - 2];
 
             if(lastHit.XCoordinate == secLast.XCoordinate)
             {
+                brain.ShipOnX = true;
                 if(brain.FoundEndOfShip == true)
                 {
 
@@ -180,8 +214,9 @@ namespace BattleShip.UI
                 lastHit.YCoordinate++;
                 return lastHit;
             }
-            if (lastHit.YCoordinate == secLast.YCoordinate)
+            else
             {
+                brain.ShipOnY = true;
                 lastHit.XCoordinate++;
                 return lastHit;
             }
@@ -189,7 +224,7 @@ namespace BattleShip.UI
 
         public static Coordinate FoundShipCalcDirection(Board board, Brain brain)
         {
-            var lastHit = brain.HitShots.Last();
+            var lastHit = brain.HitShotsIncreasing.Last();
 
             //right to last hit
             Coordinate right = Right(lastHit);
@@ -211,13 +246,9 @@ namespace BattleShip.UI
             {
                 return up;
             }
-
             //down to last hit
             Coordinate down = Down(lastHit);
-            if (board.HasCordBeenFiredAt(down) == false && board.IsValidCoordinate(right) == true)
-            {
-                return down;
-            }
+            return down;
         }
 
         public static Coordinate Right(Coordinate lastHit)

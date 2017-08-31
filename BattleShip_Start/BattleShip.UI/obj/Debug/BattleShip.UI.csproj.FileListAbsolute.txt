@@ -10,3 +10,15 @@ C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip
 C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\nunit.framework.xml
 C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.exe
 C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.pdb
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.UI.exe.config
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.exe
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.pdb
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.csprojResolveAssemblyReference.cache
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.UI.exe
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.UI.pdb
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.BLL.dll
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\Battleship.Tests.dll
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\nunit.framework.dll
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.BLL.pdb
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\Battleship.Tests.pdb
+C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\nunit.framework.xml

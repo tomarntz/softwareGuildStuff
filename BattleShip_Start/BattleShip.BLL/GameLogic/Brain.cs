@@ -11,10 +11,13 @@ namespace BattleShip.BLL.GameLogic
 {
     public class Brain
     {
-        public List<Coordinate> HitShots;
+        public List<Coordinate> HitShotsIncreasing;
+        public List<Coordinate> HitShotsDecreasing;
         public Coordinate InitialHitOfShip;
         public bool FoundShip;
         public bool FoundShipDirection;
         public bool FoundEndOfShip;
+        public bool ShipOnX;
+        public bool ShipOnY;
     }
 }

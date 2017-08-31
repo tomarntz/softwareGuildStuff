@@ -244,9 +244,6 @@ namespace BattleShip.UI
                 case "1":
                     ArtificialIntelligence.EasyMode();
                     break;
-                case "2":
-                    ArtificialIntelligence.MediumMode();
-                    break;
                 case "3":
                     ArtificialIntelligence.HardMode();
                     break;
@@ -264,6 +261,8 @@ namespace BattleShip.UI
             Player1.Name = PromptString("Enter your name.", true);
             Console.Clear();
             Player2.Name = ("computer");
+            Players.Add(Player1);
+            Players.Add(Player2);
             return Players;
         }
 

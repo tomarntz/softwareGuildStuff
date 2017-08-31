@@ -139,7 +139,7 @@ namespace BattleShip.UI
                     switch (response.ShotStatus)
                     {
                         case ShotStatus.Miss:
-                            if(brain.FoundShip == true)
+                            if(brain.FoundShipDirection == true)
                             {
                                 brain.FoundEndOfShip = true;
                             }
@@ -148,8 +148,15 @@ namespace BattleShip.UI
                             isvalid = true;
                             break;
                         case ShotStatus.Hit:
-                            brain.HitShots.Add(cord);
-                            if(brain.FoundShip == true)
+                            if (brain.FoundEndOfShip == true)
+                            {
+                                brain.HitShotsDecreasing.Add(cord);
+                            }
+                            else
+                            {
+                                brain.HitShotsIncreasing.Add(cord);
+                            }
+                            if (brain.FoundShip == true)
                             {
                                 brain.FoundShipDirection = true;
                             }
@@ -160,7 +167,7 @@ namespace BattleShip.UI
                             break;
                         case ShotStatus.HitAndSunk:
                             ConsoleIO.DisplayAIBoardShotHistory(board);
-                            brain.HitShots.Add(cord);
+                            brain.HitShotsIncreasing.Add(cord);
                             brain.FoundShip = false;
                             brain.FoundShipDirection = false;
                             brain.InitialHitOfShip = null;
