@@ -33,7 +33,7 @@ namespace BattleShip.UI
                     }
                 }
             }
-            AIThinking("AI is placing its ships");
+            LoadingBar("AI is placing its ships");
         }
 
         public static FireShotResponse FireShot(Board board, string name)
@@ -69,7 +69,7 @@ namespace BattleShip.UI
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            AIThinking("AI calculating shot");
+            LoadingBar("AI calculating shot");
             return response;
         }
 
@@ -129,7 +129,7 @@ namespace BattleShip.UI
             }
         }
 
-        public static void AIThinking(string message)
+        public static void LoadingBar(string message)
         {
             Console.Clear();
             Console.WriteLine(message);
@@ -256,6 +256,71 @@ namespace BattleShip.UI
 
         }
 
+        public static Brain UpdateBrain(Brain brain, FireShotResponse response)
+        {
+            switch (response.ShipImpacted)
+            {
+                case "Destroyer":
+                    break;
+                case "Submarine":
+                    break;
+                case "Cruiser":
+                    break;
+                case "Battleship":
+                    break;
+                case "Carrier":
+                    break;
+            }
+            switch (response.ShotStatus)
+            {
+                case ShotStatus.Miss:
+                    if (brain.FoundShipDirection == true)
+                    {
+                        brain.FoundEndOfShip = true;
+                    }
+                    ConsoleIO.DisplayAIBoardShotHistory(board);
+                    ConsoleIO.Display($"The AI fired and missed your ships");
+                    isvalid = true;
+                    break;
+                case ShotStatus.Hit:
+                    if (brain.FoundEndOfShip == true)
+                    {
+                        brain.HitShotsDecreasing.Add(cord);
+                    }
+                    else
+                    {
+                        brain.InitialHitOfShip = cord;
+                        brain.HitShotsIncreasing.Add(cord);
+                    }
+                    if (brain.FoundShip == true)
+                    {
+                        brain.FoundShipDirection = true;
+                    }
+                    brain.FoundShip = true;
+                    ConsoleIO.DisplayAIBoardShotHistory(board);
+                    ConsoleIO.Display($"The AI hit your {response.ShipImpacted}");
+                    isvalid = true;
+                    break;
+                case ShotStatus.HitAndSunk:
+                    ConsoleIO.DisplayAIBoardShotHistory(board);
+                    brain.HitShotsIncreasing.Add(cord);
+                    brain.FoundShip = false;
+                    brain.FoundShipDirection = false;
+                    brain.InitialHitOfShip = null;
+                    brain.FoundEndOfShip = false;
+                    ConsoleIO.Display($"The AI hit and sunk your {response.ShipImpacted}");
+                    isvalid = true;
+                    break;
+                case ShotStatus.Victory:
+                    ConsoleIO.DisplayAIBoardShotHistory(board);
+                    ConsoleIO.Display($"The AI sunk your last ship you are the loser");
+                    isvalid = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public static Coordinate FoundDirectionCalcShot(Board board, Brain brain)
         {
             Coordinate lastHit = brain.HitShotsIncreasing.Last();
@@ -281,7 +346,7 @@ namespace BattleShip.UI
 
         public static Coordinate FoundShipCalcDirection(Board board, Brain brain)
         {
-            var lastHit = brain.HitShotsIncreasing.Last();
+             var lastHit = brain.HitShotsIncreasing.Last();
 
             //right to last hit
             Coordinate right = Right(lastHit);

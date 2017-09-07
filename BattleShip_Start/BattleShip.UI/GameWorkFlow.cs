@@ -132,54 +132,7 @@ namespace BattleShip.UI
                 {
                     Coordinate cord = ArtificialIntelligence.CalcShot(board, brain);
                     response = board.FireShot(cord);
-                    switch (response.ShotStatus)
-                    {
-                        case ShotStatus.Miss:
-                            if(brain.FoundShipDirection == true)
-                            {
-                                brain.FoundEndOfShip = true;
-                            }
-                            ConsoleIO.DisplayAIBoardShotHistory(board);
-                            ConsoleIO.Display($"The AI fired and missed your ships");
-                            isvalid = true;
-                            break;
-                        case ShotStatus.Hit:
-                            if (brain.FoundEndOfShip == true)
-                            {
-                                brain.HitShotsDecreasing.Add(cord);
-                            }
-                            else
-                            {
-                                brain.InitialHitOfShip = cord;
-                                brain.HitShotsIncreasing.Add(cord);
-                            }
-                            if (brain.FoundShip == true)
-                            {
-                                brain.FoundShipDirection = true;
-                            }
-                            brain.FoundShip = true;
-                            ConsoleIO.DisplayAIBoardShotHistory(board);
-                            ConsoleIO.Display($"The AI hit your {response.ShipImpacted}");
-                            isvalid = true;
-                            break;
-                        case ShotStatus.HitAndSunk:
-                            ConsoleIO.DisplayAIBoardShotHistory(board);
-                            brain.HitShotsIncreasing.Add(cord);
-                            brain.FoundShip = false;
-                            brain.FoundShipDirection = false;
-                            brain.InitialHitOfShip = null;
-                            brain.FoundEndOfShip = false;
-                            ConsoleIO.Display($"The AI hit and sunk your {response.ShipImpacted}");
-                            isvalid = true;
-                            break;
-                        case ShotStatus.Victory:
-                            ConsoleIO.DisplayAIBoardShotHistory(board);
-                            ConsoleIO.Display($"The AI sunk your last ship you are the loser");
-                            isvalid = true;
-                            break;
-                        default:
-                            break;
-                    }
+                    ArtificialIntelligence.UpdateBrain(brain, response);
                 }
             }
             else
