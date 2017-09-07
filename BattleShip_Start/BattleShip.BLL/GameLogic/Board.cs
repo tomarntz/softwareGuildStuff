@@ -9,14 +9,14 @@ namespace BattleShip.BLL.GameLogic
 {
     public class Board
     {
-        public SortedDictionary<Coordinate, ShotHistory> ShotHistory;
+        public Dictionary<Coordinate, ShotHistory> ShotHistory;
         private Ship[] _ships;
         private int _currentShipIndex;
 
 
         public Board()
         {
-            ShotHistory = new SortedDictionary<Coordinate, ShotHistory>();
+            ShotHistory = new Dictionary<Coordinate, ShotHistory>();
             _ships = new Ship[5];
             _currentShipIndex = 0;
         }

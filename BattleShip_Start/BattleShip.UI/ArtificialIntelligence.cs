@@ -7,7 +7,7 @@ using BattleShip.BLL.GameLogic;
 using BattleShip.BLL.Requests;
 using BattleShip.BLL.Responses;
 using BattleShip.BLL.Ships;
-
+using System.Threading;
 
 namespace BattleShip.UI
 {
@@ -33,6 +33,7 @@ namespace BattleShip.UI
                     }
                 }
             }
+            AIThinking("AI is placing its ships");
         }
 
         public static FireShotResponse FireShot(Board board, string name)
@@ -68,6 +69,7 @@ namespace BattleShip.UI
                         throw new ArgumentOutOfRangeException();
                 }
             }
+            AIThinking("AI calculating shot");
             return response;
         }
 
@@ -125,6 +127,61 @@ namespace BattleShip.UI
                 default:
                     break;
             }
+        }
+
+        public static void AIThinking(string message)
+        {
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("*");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("**");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("***");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("****");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("*");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("**");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("***");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("****");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("*");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("**");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("***");
+            Thread.Sleep(250);
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("****");
+            Thread.Sleep(250);
+            Console.Clear();
         }
 
         public static void EasyMode()

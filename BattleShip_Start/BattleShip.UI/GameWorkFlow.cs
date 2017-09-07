@@ -132,10 +132,6 @@ namespace BattleShip.UI
                 {
                     Coordinate cord = ArtificialIntelligence.CalcShot(board, brain);
                     response = board.FireShot(cord);
-                    if(response.ShotStatus == ShotStatus.Hit && brain.FoundShip == false)
-                    {
-                        brain.InitialHitOfShip = cord;
-                    }
                     switch (response.ShotStatus)
                     {
                         case ShotStatus.Miss:
@@ -154,6 +150,7 @@ namespace BattleShip.UI
                             }
                             else
                             {
+                                brain.InitialHitOfShip = cord;
                                 brain.HitShotsIncreasing.Add(cord);
                             }
                             if (brain.FoundShip == true)
