@@ -132,7 +132,32 @@ namespace BattleShip.UI
                 {
                     Coordinate cord = ArtificialIntelligence.CalcShot(board, brain);
                     response = board.FireShot(cord);
-                    ArtificialIntelligence.UpdateBrain(brain, response);
+                    switch (response.ShotStatus)
+                    {
+                        case ShotStatus.Hit:
+                            ArtificialIntelligence.UpdateBrainOnHit(brain, response, cord);
+                            ConsoleIO.DisplayAIBoardShotHistory(board);
+                            ConsoleIO.Display($"The AI hit your {response.ShipImpacted}");
+                            isvalid = true;
+                            break;
+                        case ShotStatus.Miss:
+                            ArtificialIntelligence.UpdateBrainOnMiss(brain, response);
+                            ConsoleIO.DisplayAIBoardShotHistory(board);
+                            ConsoleIO.Display($"The AI fired and missed your ships");
+                            isvalid = true;
+                            break;
+                        case ShotStatus.HitAndSunk:
+                            ArtificialIntelligence.UpdateBrainOnHitAndSunk(brain, response);
+                            ConsoleIO.DisplayAIBoardShotHistory(board);
+                            ConsoleIO.Display($"The AI hit and sunk your {response.ShipImpacted}");
+                            isvalid = true;
+                            break;
+                        case ShotStatus.Victory:
+                            ConsoleIO.DisplayAIBoardShotHistory(board);
+                            ConsoleIO.Display($"The AI sunk your last ship you are the loser");
+                            isvalid = true;
+                            break;
+                    }
                 }
             }
             else

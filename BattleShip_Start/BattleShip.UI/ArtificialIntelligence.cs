@@ -203,23 +203,7 @@ namespace BattleShip.UI
 
         public static Coordinate CalcShot(Board board, Brain brain)
         {
-            if(brain.FoundEndOfShip == true)
-            {
-                Coordinate cord = FoundEndOfShipCalcShot(board, brain);
-                return cord;
-            }
-            if (brain.FoundShipDirection == true)
-            {
-                Coordinate cord = FoundDirectionCalcShot(board, brain);
-                return cord;
-            }
-            if(brain.FoundShipDirection == false && brain.FoundShip == true)
-            {
-                Coordinate cord = FoundShipCalcDirection(board, brain);
-                return cord;
-            }
-            Coordinate randomCord = MakeCoordinate();
-            return randomCord;
+            
         }
 
         public static Coordinate FoundEndOfShipCalcShot(Board board, Brain brain)
@@ -256,70 +240,116 @@ namespace BattleShip.UI
 
         }
 
-        public static Brain UpdateBrain(Brain brain, FireShotResponse response)
+        public static void UpdateBrainOnMiss(Brain brain, FireShotResponse response, Coordinate cord)
         {
-            switch (response.ShipImpacted)
+           foreach(KeyValuePair<ShipType, bool> ship in brain.FiringAtShip)
             {
-                case "Destroyer":
-                    break;
-                case "Submarine":
-                    break;
-                case "Cruiser":
-                    break;
-                case "Battleship":
-                    break;
-                case "Carrier":
-                    break;
-            }
-            switch (response.ShotStatus)
-            {
-                case ShotStatus.Miss:
-                    if (brain.FoundShipDirection == true)
+                if (ship.Value)
+                {
+                    foreach(KeyValuePair<ShipType, Coordinate>endOfShip in brain.InitialHitOfShip)
                     {
-                        brain.FoundEndOfShip = true;
+                        if(ship.Key == endOfShip.Key)
+                        {
+                            brain.InitialHitOfShip.Remove(endOfShip.Key);
+                            brain.InitialHitOfShip.Add(endOfShip.Key, cord);
+                        }
                     }
-                    ConsoleIO.DisplayAIBoardShotHistory(board);
-                    ConsoleIO.Display($"The AI fired and missed your ships");
-                    isvalid = true;
-                    break;
-                case ShotStatus.Hit:
-                    if (brain.FoundEndOfShip == true)
+                }
+            }
+        }
+
+        public static void UpdateBrainOnHitAndSunk(Brain brain, FireShotResponse response)
+        {
+            if(response.ShipImpacted == "Battleship")
+            {
+                brain.firingAtBattleship = false;
+            }
+            if (response.ShipImpacted == "Destroyer")
+            {
+                brain.firingAtDestroyer = false;
+            }
+            if (response.ShipImpacted == "Submarine")
+            {
+                brain.firingAtSubmarine = false;
+            }
+            if (response.ShipImpacted == "Cruiser")
+            {
+                brain.firingAtCruiser = false;
+            }
+            if (response.ShipImpacted == "Carrier")
+            {
+                brain.firingAtCarrier = false;
+            }
+        }
+
+        public static void UpdateBrainOnHit(Brain brain, FireShotResponse response, Coordinate cord)
+        {
+            foreach (KeyValuePair<ShipType, Coordinate> initialHit in brain.InitialHitOfShip)
+            {
+                if (initialHit.Value == null && response.ShipImpacted == initialHit.Key.ToString())
+                {
+                    brain.InitialHitOfShip.Remove(initialHit.Key);
+                    brain.InitialHitOfShip.Add(initialHit.Key, cord);
+
+                    brain.HitShotsIncreasing.Remove(initialHit.Key);
+                    brain.HitShotsIncreasing.Add(initialHit.Key, new List<Coordinate> { cord });
+                }
+            }
+            foreach (KeyValuePair<ShipType, bool> Firing in brain.FiringAtShip)
+            {
+                if (Firing.Key.ToString() == response.ShipImpacted)
+                {
+                    if (!Firing.Value)
                     {
-                        brain.HitShotsDecreasing.Add(cord);
+                        brain.FiringAtShip.Remove(Firing.Key);
+                        brain.FiringAtShip.Add(Firing.Key, true);
                     }
                     else
                     {
-                        brain.InitialHitOfShip = cord;
-                        brain.HitShotsIncreasing.Add(cord);
+                        return
                     }
-                    if (brain.FoundShip == true)
-                    {
-                        brain.FoundShipDirection = true;
-                    }
-                    brain.FoundShip = true;
-                    ConsoleIO.DisplayAIBoardShotHistory(board);
-                    ConsoleIO.Display($"The AI hit your {response.ShipImpacted}");
-                    isvalid = true;
-                    break;
-                case ShotStatus.HitAndSunk:
-                    ConsoleIO.DisplayAIBoardShotHistory(board);
-                    brain.HitShotsIncreasing.Add(cord);
-                    brain.FoundShip = false;
-                    brain.FoundShipDirection = false;
-                    brain.InitialHitOfShip = null;
-                    brain.FoundEndOfShip = false;
-                    ConsoleIO.Display($"The AI hit and sunk your {response.ShipImpacted}");
-                    isvalid = true;
-                    break;
-                case ShotStatus.Victory:
-                    ConsoleIO.DisplayAIBoardShotHistory(board);
-                    ConsoleIO.Display($"The AI sunk your last ship you are the loser");
-                    isvalid = true;
-                    break;
-                default:
-                    break;
+                }
+                foreach (KeyValuePair<ShipType, Coordinate> Next in brain.ShipsToFireAtNext)
+                {
+
+                }
+
+                  
             }
         }
+
+        //switch (response.ShotStatus)
+        //{
+        //    case ShotStatus.Hit:
+        //        if (brain.FoundEndOfShip == true)
+        //        {
+        //            brain.HitShotsDecreasing.Add(cord);
+        //        }
+        //        else
+        //        {
+        //            brain.InitialHitOfShip = cord;
+        //            brain.HitShotsIncreasing.Add(cord);
+        //        }
+        //        if (brain.FoundShip == true)
+        //        {
+        //            brain.FoundShipDirection = true;
+        //        }
+        //        brain.FoundShip = true;
+        //        break;
+        //    case ShotStatus.HitAndSunk:
+        //        ConsoleIO.DisplayAIBoardShotHistory(board);
+        //        brain.HitShotsIncreasing.Add(cord);
+        //        brain.FoundShip = false;
+        //        brain.FoundShipDirection = false;
+        //        brain.InitialHitOfShip = null;
+        //        brain.FoundEndOfShip = false;
+        //        break;
+        //    case ShotStatus.Victory:
+        //        isvalid = true;
+        //        break;
+        //    default:
+        //        break;
+        //}
 
         public static Coordinate FoundDirectionCalcShot(Board board, Brain brain)
         {
