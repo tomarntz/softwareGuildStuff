@@ -19,9 +19,7 @@ namespace BattleShip.BLL.GameLogic
 
         public Dictionary<ShipType, bool?> ShipOnXAxis;
 
-        public Dictionary<ShipType, List<Coordinate>> HitShotsIncreasing;
-
-        public Dictionary<ShipType, List<Coordinate>> HitShotsDecreasing;
+        public Dictionary<ShipType, List<Coordinate>> HitShots;
 
         public Dictionary<ShipType, Coordinate> ShipsToFireAtNext;
 
@@ -49,7 +47,6 @@ namespace BattleShip.BLL.GameLogic
             FiringAtShip.Add(ShipType.Cruiser, false);
             FiringAtShip.Add(ShipType.Destroyer, false);
             FiringAtShip.Add(ShipType.Submarine, false);
-            FiringAtShip.Add(ShipType.None, true);
 
 
             ShipOnXAxis = new Dictionary<ShipType, bool?>();
@@ -59,19 +56,12 @@ namespace BattleShip.BLL.GameLogic
             ShipOnXAxis.Add(ShipType.Destroyer, null);
             ShipOnXAxis.Add(ShipType.Submarine, null);
 
-            HitShotsIncreasing = new Dictionary<ShipType, List<Coordinate>>();
-            HitShotsIncreasing.Add(ShipType.Battleship, null);
-            HitShotsIncreasing.Add(ShipType.Carrier, null);
-            HitShotsIncreasing.Add(ShipType.Cruiser, null);
-            HitShotsIncreasing.Add(ShipType.Destroyer, null);
-            HitShotsIncreasing.Add(ShipType.Submarine, null);
-
-            HitShotsDecreasing = new Dictionary<ShipType, List<Coordinate>>();
-            HitShotsDecreasing.Add(ShipType.Battleship, null);
-            HitShotsDecreasing.Add(ShipType.Carrier, null);
-            HitShotsDecreasing.Add(ShipType.Cruiser, null);
-            HitShotsDecreasing.Add(ShipType.Destroyer, null);
-            HitShotsDecreasing.Add(ShipType.Submarine, null);
+            HitShots = new Dictionary<ShipType, List<Coordinate>>();
+            HitShots.Add(ShipType.Battleship, null);
+            HitShots.Add(ShipType.Carrier, null);
+            HitShots.Add(ShipType.Cruiser, null);
+            HitShots.Add(ShipType.Destroyer, null);
+            HitShots.Add(ShipType.Submarine, null);
 
             ShipsToFireAtNext = new Dictionary<ShipType, Coordinate>();
         }

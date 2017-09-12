@@ -203,19 +203,20 @@ namespace BattleShip.UI
 
         public static Coordinate CalcShot(Board board, Brain brain)
         {
-            ShipType ship = ShipCurrentlyUnderFire(brain);
+            var ship = ShipCurrentlyUnderFire(brain);
             //found a ship dont know direction
-            if (ship != ShipType.None)
+            if (ship != null)
             {
+                ShipType shippy = ConverStringToShip(ship.ToString());
                 //found direction havent found end
-                if (DoWeKnowShipDirection(brain, ship) != null)
+                if (DoWeKnowShipDirection(brain, shippy) != null)
                 {
                     // found end of ship
-                    if (DoWeKnowTheEndOfShip(brain,ship))
+                    if (DoWeKnowTheEndOfShip(brain, shippy))
                     {
-                        return FoundEndOfShipCalcShot(board, brain, ship);
+                        return FoundEndOfShipCalcShot(board, brain, shippy);
                     }
-                    return FoundDirectionCalcShot(board, brain, ship);
+                    return FoundDirectionCalcShot(board, brain, shippy);
                 }
                 return FoundShipCalcDirection(board, brain);
             }
@@ -258,19 +259,9 @@ namespace BattleShip.UI
 
         public static void UpdateBrainOnMiss(Brain brain, FireShotResponse response, Coordinate cord)
         {
-           foreach(KeyValuePair<ShipType, bool> ship in brain.FiringAtShip)
-            {
-                if (ship.Value)
-                {
-                    foreach(KeyValuePair<ShipType, Coordinate>endOfShip in brain.InitialHitOfShip)
-                    {
-                        if(ship.Key == endOfShip.Key)
-                        {
-                            brain.InitialHitOfShip[endOfShip.Key] = cord;
-                        }
-                    }
-                }
-            }
+           //determine if AI was even aiming at a ship
+           //if it was did it know the ship direction
+           //if it knew the direction it must of reached the end of the ship
         }
 
         public static void UpdateBrainOnHitAndSunk(Brain brain, FireShotResponse response)
@@ -280,9 +271,9 @@ namespace BattleShip.UI
         }
 
     
-        public static ShipType ShipCurrentlyUnderFire(Brain brain)
+        public static ShipType? ShipCurrentlyUnderFire(Brain brain)
         {
-            ShipType shipUnderFire = brain.FiringAtShip.FirstOrDefault(x => x.Value == true).Key;
+            var shipUnderFire = brain.FiringAtShip.First(x => x.Value == true).Key;
             return shipUnderFire;
         }
 
@@ -307,52 +298,121 @@ namespace BattleShip.UI
             }
             return false;
         }
-
+        
         public static void UpdateBrainOnHit(Brain brain, FireShotResponse response, Coordinate cord)
         {
-            string shipAimingAt = ShipCurrentlyUnderFire(brain).ToString();
-
-            foreach (KeyValuePair<ShipType, Coordinate> initialHit in brain.InitialHitOfShip)
+            //Need to determine if this was the first hit and if so set initHit and FiringAtShip
+            //continue with first step till the same ship is hit again to determine direction and set shipOnXAxis
+            //continue hitting on axis determined by step 2 until a miss or a hit of a different ship set foundEndOfShip
+            ShipType shipJustHit = ConverStringToShip(response.ShipImpacted);
+            var shipAimingAt = ShipCurrentlyUnderFire(brain);
+            //we have a ship in site
+            if(shipAimingAt != null)
             {
-                foreach (KeyValuePair<ShipType, bool> Firing in brain.FiringAtShip)
+                //make sure ship just hit is the ship that was being aimed at 
+                if (shipAimingAt == shipJustHit)
                 {
-                    //make sure the 2 dictionaries are on the same ship
-                    if(initialHit.Key == Firing.Key)
+                    //ship hit twice able to set ship direction
+                    if(brain.HitShots[shipJustHit].Count >= 2)
                     {
-                        //make sure that ship is the one just hit
-                        if (response.ShipImpacted == initialHit.Key.ToString())
+                        //determine direction and set shipOnXAxis
+                        Coordinate lastHit = brain.HitShots[shipJustHit].Last();
+                        Coordinate secLast = brain.HitShots[shipJustHit][brain.HitShots[shipJustHit].Count - 2];
+                        if (lastHit.XCoordinate == secLast.XCoordinate)
                         {
-                            //very first hit of ship
-                            if (initialHit.Value == null && !Firing.Value && shipAimingAt == null)
-                            {
-                                brain.InitialHitOfShip[initialHit.Key] = cord;
-                                brain.FiringAtShip[Firing.Key] = true;
-                                brain.HitShotsIncreasing[initialHit.Key] = new List<Coordinate> { cord };
-                            }
-                            //after first hit of ship
-                            else if(shipAimingAt != )
-                            {
-                                brain.HitShotsIncreasing.Add(initialHit.Key, new List<Coordinate> { cord });
-                            }
+                            brain.ShipOnXAxis[shipJustHit] = true;
+                            lastHit.YCoordinate++;
+                        }
+                        else
+                        {
+                            brain.ShipOnXAxis[shipJustHit] = false;
+                            lastHit.XCoordinate++;
+                        }
+                    }
+                }
+                else
+                {
+                    //hit a ship that wasnt aiming at
+                    brain.ShipsToFireAtNext.Add(shipJustHit, cord);
+                }
+            }
+            else
+            {
+                //first hit of ship after random number gen
+                brain.InitialHitOfShip[shipJustHit] = cord;
+                UpdateFiringAtShip(shipJustHit, brain);
+            }
+        }
+
+
+
+        //        string shipAimingAt = ShipCurrentlyUnderFire(brain).ToString();
+
+        //            foreach (KeyValuePair<ShipType, Coordinate> initialHit in brain.InitialHitOfShip)
+        //            {
+        //                foreach (KeyValuePair<ShipType, bool> Firing in brain.FiringAtShip)
+        //                {
+        //                    //make sure the 2 dictionaries are on the same ship
+        //                    if(initialHit.Key == Firing.Key)
+        //                    {
+        //                        //make sure that ship is the one just hit
+        //                        if (response.ShipImpacted == initialHit.Key.ToString())
+        //                        {
+        //                            //very first hit of ship
+        //                            if (initialHit.Value == null && !Firing.Value && shipAimingAt == null)
+        //                            {
+        //                                brain.InitialHitOfShip[initialHit.Key] = cord;
+        //                                brain.FiringAtShip[Firing.Key] = true;
+        //                                brain.HitShotsIncreasing[initialHit.Key] = new List<Coordinate> { cord
+        //    };
+        //}
+        //                            //after first hit of ship
+        //                            else if(shipAimingAt != )
+        //                            {
+        //                                brain.HitShotsIncreasing.Add(initialHit.Key, new List<Coordinate> { cord });
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //            ///////////////////////////////////////////////////////////////
+        //            //uuuugggghh need to check for ship direction 
+        //            //found a new ship when trying to sink differnent ship add to list for later use
+        //                        else
+        //                        {
+        //                //adds ship to list of ships to fire at after sinking current ship and sets initial hit
+        //                brain.ShipsToFireAtNext.Add(ConverStringToShip(response.ShipImpacted), cord);
+        //                brain.InitialHitOfShip[ConverStringToShip(response.ShipImpacted)] = cord;
+
+        //            }
+
+        //            //if you not yet firing at ship just hit 
+        //            if (!Firing.Value && ShipAimingAt == response.ShipImpacted)
+        //            {
+
+        //            }
+
+        public static bool HasAIFoundEndOfShip(Brain brain, ShipType ship)
+        {
+            //if its the ship currently under fire
+            if (brain.FiringAtShip[ship])
+            {
+                // AI  has hit the ship
+                if (brain.InitialHitOfShip[ship] != null)
+                {
+                    // AI Knows the direction of the ship
+                    if(brain.ShipOnXAxis[ship] != null)
+                    {
+                        //found end of ship
+                        if (brain.FoundEndOfShips[ship])
+                        {
+                            return true;
                         }
                     }
                 }
             }
-            ///////////////////////////////////////////////////////////////
-            //uuuugggghh need to check for ship direction 
-            //found a new ship when trying to sink differnent ship add to list for later use
-                        else
-                        {
-                //adds ship to list of ships to fire at after sinking current ship and sets initial hit
-                brain.ShipsToFireAtNext.Add(ConverStringToShip(response.ShipImpacted), cord);
-                brain.InitialHitOfShip[ConverStringToShip(response.ShipImpacted)] = cord;
-
-            }
-
-            //if you not yet firing at ship just hit 
-            if (!Firing.Value && ShipAimingAt == response.ShipImpacted)
+            return false;
         }
-               
 
         public static void UpdateFiringAtShip(ShipType shipUnderFire, Brain brain)
         {
@@ -451,21 +511,9 @@ namespace BattleShip.UI
 
         public static Coordinate FoundDirectionCalcShot(Board board, Brain brain, ShipType ship)
         {
-            Coordinate lastHit = brain.HitShotsIncreasing[ship].Last();
-            Coordinate secLast = brain.HitShotsIncreasing[ship][brain.HitShotsIncreasing[ship].Count-2];
+           
 
-            if (lastHit.XCoordinate == secLast.XCoordinate)
-            {
-                brain.ShipOnXAxis[ship] = true;
-                lastHit.YCoordinate++;
-                return lastHit;
-            }
-            else
-            {
-                brain.ShipOnXAxis[ship] = false;
-                lastHit.XCoordinate++;
-                return lastHit;
-            }
+            
         }
 
         public static Coordinate FoundShipCalcDirection(Board board, Brain brain)
