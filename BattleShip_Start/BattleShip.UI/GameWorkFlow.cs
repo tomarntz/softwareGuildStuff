@@ -141,7 +141,7 @@ namespace BattleShip.UI
                             isvalid = true;
                             break;
                         case ShotStatus.Miss:
-                            ArtificialIntelligence.UpdateBrainOnMiss(brain, response);
+                            ArtificialIntelligence.UpdateBrainOnMiss(brain, response, cord);
                             ConsoleIO.DisplayAIBoardShotHistory(board);
                             ConsoleIO.Display($"The AI fired and missed your ships");
                             isvalid = true;

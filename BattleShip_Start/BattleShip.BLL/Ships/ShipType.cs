@@ -6,6 +6,7 @@
         Submarine,
         Cruiser,
         Battleship,
-        Carrier
+        Carrier,
+        None
     }
 }

@@ -49,6 +49,8 @@ namespace BattleShip.BLL.GameLogic
             FiringAtShip.Add(ShipType.Cruiser, false);
             FiringAtShip.Add(ShipType.Destroyer, false);
             FiringAtShip.Add(ShipType.Submarine, false);
+            FiringAtShip.Add(ShipType.None, true);
+
 
             ShipOnXAxis = new Dictionary<ShipType, bool?>();
             ShipOnXAxis.Add(ShipType.Battleship, null);
@@ -58,11 +60,11 @@ namespace BattleShip.BLL.GameLogic
             ShipOnXAxis.Add(ShipType.Submarine, null);
 
             HitShotsIncreasing = new Dictionary<ShipType, List<Coordinate>>();
-            ShipOnXAxis.Add(ShipType.Battleship, null);
-            ShipOnXAxis.Add(ShipType.Carrier, null);
-            ShipOnXAxis.Add(ShipType.Cruiser, null);
-            ShipOnXAxis.Add(ShipType.Destroyer, null);
-            ShipOnXAxis.Add(ShipType.Submarine, null);
+            HitShotsIncreasing.Add(ShipType.Battleship, null);
+            HitShotsIncreasing.Add(ShipType.Carrier, null);
+            HitShotsIncreasing.Add(ShipType.Cruiser, null);
+            HitShotsIncreasing.Add(ShipType.Destroyer, null);
+            HitShotsIncreasing.Add(ShipType.Submarine, null);
 
             HitShotsDecreasing = new Dictionary<ShipType, List<Coordinate>>();
             HitShotsDecreasing.Add(ShipType.Battleship, null);

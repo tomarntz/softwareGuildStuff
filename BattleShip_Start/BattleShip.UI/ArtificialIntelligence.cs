@@ -203,15 +203,31 @@ namespace BattleShip.UI
 
         public static Coordinate CalcShot(Board board, Brain brain)
         {
-            
+            ShipType ship = ShipCurrentlyUnderFire(brain);
+            //found a ship dont know direction
+            if (ship != ShipType.None)
+            {
+                //found direction havent found end
+                if (DoWeKnowShipDirection(brain, ship) != null)
+                {
+                    // found end of ship
+                    if (DoWeKnowTheEndOfShip(brain,ship))
+                    {
+                        return FoundEndOfShipCalcShot(board, brain, ship);
+                    }
+                    return FoundDirectionCalcShot(board, brain, ship);
+                }
+                return FoundShipCalcDirection(board, brain);
+            }
+            return MakeCoordinate();
         }
 
-        public static Coordinate FoundEndOfShipCalcShot(Board board, Brain brain)
+        public static Coordinate FoundEndOfShipCalcShot(Board board, Brain brain, ShipType ship)
         {
-            Coordinate startingPoint = brain.InitialHitOfShip;
-            if(brain.HitShotsDecreasing == null)
+            Coordinate startingPoint = brain.InitialHitOfShip[ship];
+            if(brain.HitShotsDecreasing[ship] == null)
             {
-                if(brain.ShipOnX == true)
+                if(brain.ShipOnXAxis[ship] == true)
                 {
                     startingPoint.YCoordinate--;
                     return startingPoint;
@@ -250,8 +266,7 @@ namespace BattleShip.UI
                     {
                         if(ship.Key == endOfShip.Key)
                         {
-                            brain.InitialHitOfShip.Remove(endOfShip.Key);
-                            brain.InitialHitOfShip.Add(endOfShip.Key, cord);
+                            brain.InitialHitOfShip[endOfShip.Key] = cord;
                         }
                     }
                 }
@@ -260,61 +275,144 @@ namespace BattleShip.UI
 
         public static void UpdateBrainOnHitAndSunk(Brain brain, FireShotResponse response)
         {
-            if(response.ShipImpacted == "Battleship")
+            var ship = ConverStringToShip(response.ShipImpacted);
+            UpdateFiringAtShip(ship, brain);
+        }
+
+    
+        public static ShipType ShipCurrentlyUnderFire(Brain brain)
+        {
+            ShipType shipUnderFire = brain.FiringAtShip.FirstOrDefault(x => x.Value == true).Key;
+            return shipUnderFire;
+        }
+
+        public static bool? DoWeKnowShipDirection(Brain brain, ShipType ship)
+        {
+            if (brain.ShipOnXAxis[ship] == true)
             {
-                brain.firingAtBattleship = false;
+                return true;
             }
-            if (response.ShipImpacted == "Destroyer")
+            if(brain.ShipOnXAxis[ship] == false)
             {
-                brain.firingAtDestroyer = false;
+                return false;
             }
-            if (response.ShipImpacted == "Submarine")
+            return null;
+        }
+
+        public static bool DoWeKnowTheEndOfShip(Brain brain, ShipType ship)
+        {
+            if(brain.FoundEndOfShips[ship] == true)
             {
-                brain.firingAtSubmarine = false;
+                return true;
             }
-            if (response.ShipImpacted == "Cruiser")
-            {
-                brain.firingAtCruiser = false;
-            }
-            if (response.ShipImpacted == "Carrier")
-            {
-                brain.firingAtCarrier = false;
-            }
+            return false;
         }
 
         public static void UpdateBrainOnHit(Brain brain, FireShotResponse response, Coordinate cord)
         {
+            string shipAimingAt = ShipCurrentlyUnderFire(brain).ToString();
+
             foreach (KeyValuePair<ShipType, Coordinate> initialHit in brain.InitialHitOfShip)
             {
-                if (initialHit.Value == null && response.ShipImpacted == initialHit.Key.ToString())
+                foreach (KeyValuePair<ShipType, bool> Firing in brain.FiringAtShip)
                 {
-                    brain.InitialHitOfShip.Remove(initialHit.Key);
-                    brain.InitialHitOfShip.Add(initialHit.Key, cord);
-
-                    brain.HitShotsIncreasing.Remove(initialHit.Key);
-                    brain.HitShotsIncreasing.Add(initialHit.Key, new List<Coordinate> { cord });
+                    //make sure the 2 dictionaries are on the same ship
+                    if(initialHit.Key == Firing.Key)
+                    {
+                        //make sure that ship is the one just hit
+                        if (response.ShipImpacted == initialHit.Key.ToString())
+                        {
+                            //very first hit of ship
+                            if (initialHit.Value == null && !Firing.Value && shipAimingAt == null)
+                            {
+                                brain.InitialHitOfShip[initialHit.Key] = cord;
+                                brain.FiringAtShip[Firing.Key] = true;
+                                brain.HitShotsIncreasing[initialHit.Key] = new List<Coordinate> { cord };
+                            }
+                            //after first hit of ship
+                            else if(shipAimingAt != )
+                            {
+                                brain.HitShotsIncreasing.Add(initialHit.Key, new List<Coordinate> { cord });
+                            }
+                        }
+                    }
                 }
             }
-            foreach (KeyValuePair<ShipType, bool> Firing in brain.FiringAtShip)
+            ///////////////////////////////////////////////////////////////
+            //uuuugggghh need to check for ship direction 
+            //found a new ship when trying to sink differnent ship add to list for later use
+                        else
+                        {
+                //adds ship to list of ships to fire at after sinking current ship and sets initial hit
+                brain.ShipsToFireAtNext.Add(ConverStringToShip(response.ShipImpacted), cord);
+                brain.InitialHitOfShip[ConverStringToShip(response.ShipImpacted)] = cord;
+
+            }
+
+            //if you not yet firing at ship just hit 
+            if (!Firing.Value && ShipAimingAt == response.ShipImpacted)
+        }
+               
+
+        public static void UpdateFiringAtShip(ShipType shipUnderFire, Brain brain)
+        {
+            switch (shipUnderFire)
             {
-                if (Firing.Key.ToString() == response.ShipImpacted)
-                {
-                    if (!Firing.Value)
-                    {
-                        brain.FiringAtShip.Remove(Firing.Key);
-                        brain.FiringAtShip.Add(Firing.Key, true);
-                    }
-                    else
-                    {
-                        return
-                    }
-                }
-                foreach (KeyValuePair<ShipType, Coordinate> Next in brain.ShipsToFireAtNext)
-                {
+                case ShipType.Battleship:
+                    brain.FiringAtShip[ShipType.Battleship] = true;
+                    brain.FiringAtShip[ShipType.Destroyer] = false;
+                    brain.FiringAtShip[ShipType.Submarine] = false;
+                    brain.FiringAtShip[ShipType.Cruiser] = false;
+                    brain.FiringAtShip[ShipType.Carrier] = false;
+                    break;
+                case ShipType.Destroyer:
+                    brain.FiringAtShip[ShipType.Battleship] = false;
+                    brain.FiringAtShip[ShipType.Destroyer] = true;
+                    brain.FiringAtShip[ShipType.Submarine] = false;
+                    brain.FiringAtShip[ShipType.Cruiser] = false;
+                    brain.FiringAtShip[ShipType.Carrier] = false;
+                    break;
+                case ShipType.Submarine:
+                    brain.FiringAtShip[ShipType.Battleship] = false;
+                    brain.FiringAtShip[ShipType.Destroyer] = false;
+                    brain.FiringAtShip[ShipType.Submarine] = true;
+                    brain.FiringAtShip[ShipType.Cruiser] = false;
+                    brain.FiringAtShip[ShipType.Carrier] = false;
+                    break;
+                case ShipType.Cruiser:
+                    brain.FiringAtShip[ShipType.Battleship] = false;
+                    brain.FiringAtShip[ShipType.Destroyer] = false;
+                    brain.FiringAtShip[ShipType.Submarine] = false;
+                    brain.FiringAtShip[ShipType.Cruiser] = true;
+                    brain.FiringAtShip[ShipType.Carrier] = false;
+                    break;
+                case ShipType.Carrier:
+                    brain.FiringAtShip[ShipType.Battleship] = false;
+                    brain.FiringAtShip[ShipType.Destroyer] = false;
+                    brain.FiringAtShip[ShipType.Submarine] = false;
+                    brain.FiringAtShip[ShipType.Cruiser] = false;
+                    brain.FiringAtShip[ShipType.Carrier] = true;
+                    break;
+            }
+        }
 
-                }
-
-                  
+        public static ShipType ConverStringToShip(string ship)
+        {
+            switch (ship)
+            {
+                case "Battleship":
+                    return ShipType.Battleship;
+                case "Destroyer":
+                    return ShipType.Destroyer;
+                case "Submarine":
+                    return ShipType.Submarine;
+                case "Cruiser":
+                    return ShipType.Cruiser;
+                case "Carrier":
+                    return ShipType.Carrier;
+                    //should never happen
+                default:
+                    return ShipType.Carrier;
             }
         }
 
@@ -351,24 +449,20 @@ namespace BattleShip.UI
         //        break;
         //}
 
-        public static Coordinate FoundDirectionCalcShot(Board board, Brain brain)
+        public static Coordinate FoundDirectionCalcShot(Board board, Brain brain, ShipType ship)
         {
-            Coordinate lastHit = brain.HitShotsIncreasing.Last();
-            Coordinate secLast = brain.HitShotsIncreasing[brain.HitShotsIncreasing.Count - 2];
+            Coordinate lastHit = brain.HitShotsIncreasing[ship].Last();
+            Coordinate secLast = brain.HitShotsIncreasing[ship][brain.HitShotsIncreasing[ship].Count-2];
 
-            if(lastHit.XCoordinate == secLast.XCoordinate)
+            if (lastHit.XCoordinate == secLast.XCoordinate)
             {
-                brain.ShipOnX = true;
-                if(brain.FoundEndOfShip == true)
-                {
-
-                }
+                brain.ShipOnXAxis[ship] = true;
                 lastHit.YCoordinate++;
                 return lastHit;
             }
             else
             {
-                brain.ShipOnY = true;
+                brain.ShipOnXAxis[ship] = false;
                 lastHit.XCoordinate++;
                 return lastHit;
             }
@@ -376,55 +470,36 @@ namespace BattleShip.UI
 
         public static Coordinate FoundShipCalcDirection(Board board, Brain brain)
         {
-             var lastHit = brain.HitShotsIncreasing.Last();
+            ShipType ship = ShipCurrentlyUnderFire(brain);
+            Coordinate lastHit = brain.InitialHitOfShip[ship];
 
             //right to last hit
-            Coordinate right = Right(lastHit);
-            if(board.HasCordBeenFiredAt(right) == false && board.IsValidCoordinate(right) == true)
+            Coordinate right = lastHit;
+            right.XCoordinate++;
+            if((!board.HasCordBeenFiredAt(right)) && (board.IsValidCoordinate(right)))
             {
                 return right;
             }
 
             //left to last hit
-            Coordinate left = Left(lastHit);
-            if (board.HasCordBeenFiredAt(left) == false && board.IsValidCoordinate(right) == true)
+            Coordinate left = lastHit;
+            left.XCoordinate--;
+            if ((!board.HasCordBeenFiredAt(left)) && (board.IsValidCoordinate(right)))
             {
                 return left;
             }
 
             //up to last hit
-            Coordinate up = Up(lastHit);
-            if (board.HasCordBeenFiredAt(up) == false && board.IsValidCoordinate(right) == true)
+            Coordinate up = lastHit;
+            up.YCoordinate--;
+            if ((!board.HasCordBeenFiredAt(up)) && (board.IsValidCoordinate(right)))
             {
                 return up;
             }
             //down to last hit
-            Coordinate down = Down(lastHit);
+            Coordinate down = lastHit;
+            down.YCoordinate++;
             return down;
-        }
-
-        public static Coordinate Right(Coordinate lastHit)
-        {
-            lastHit.XCoordinate++;
-            return lastHit;
-        }
-
-        public static Coordinate Left(Coordinate lastHit)
-        {
-            lastHit.XCoordinate--;
-            return lastHit;
-        }
-
-        public static Coordinate Up(Coordinate lastHit)
-        {
-            lastHit.YCoordinate--;
-            return lastHit;
-        }
-
-        public static Coordinate Down(Coordinate lastHit)
-        {
-            lastHit.YCoordinate++;
-            return lastHit;
         }
     }
 }
