@@ -12,16 +12,12 @@ namespace BattleShip.BLL.GameLogic
     public class Brain
     {
         public Dictionary<ShipType, Coordinate> InitialHitOfShip;
-
         public Dictionary<ShipType,bool> FoundEndOfShips;
-
         public Dictionary<ShipType, bool> FiringAtShip;
-
         public Dictionary<ShipType, bool?> ShipOnXAxis;
-
         public Dictionary<ShipType, List<Coordinate>> HitShots;
-
         public Dictionary<ShipType, Coordinate> ShipsToFireAtNext;
+        public Dictionary<string,bool> SearchingForDirection;
 
 
         public Brain()
@@ -57,13 +53,19 @@ namespace BattleShip.BLL.GameLogic
             ShipOnXAxis.Add(ShipType.Submarine, null);
 
             HitShots = new Dictionary<ShipType, List<Coordinate>>();
-            HitShots.Add(ShipType.Battleship, null);
-            HitShots.Add(ShipType.Carrier, null);
-            HitShots.Add(ShipType.Cruiser, null);
-            HitShots.Add(ShipType.Destroyer, null);
-            HitShots.Add(ShipType.Submarine, null);
+            HitShots.Add(ShipType.Battleship, new List<Coordinate>());
+            HitShots.Add(ShipType.Carrier, new List<Coordinate>());
+            HitShots.Add(ShipType.Cruiser, new List<Coordinate>());
+            HitShots.Add(ShipType.Destroyer, new List<Coordinate>());
+            HitShots.Add(ShipType.Submarine, new List<Coordinate>());
 
             ShipsToFireAtNext = new Dictionary<ShipType, Coordinate>();
+
+            SearchingForDirection = new Dictionary<string, bool>();
+            SearchingForDirection.Add("Right", false);
+            SearchingForDirection.Add("Left", false);
+            SearchingForDirection.Add("Up", false);
+            SearchingForDirection.Add("Down", false);
         }
     }
 }

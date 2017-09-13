@@ -218,7 +218,7 @@ namespace BattleShip.UI
                     }
                     return FoundDirectionCalcShot(board, brain, shippy);
                 }
-                return FoundShipCalcDirection(board, brain);
+                return FoundShipCalcDirection(board, brain, shippy);
             }
             return MakeCoordinate();
         }
@@ -226,42 +226,38 @@ namespace BattleShip.UI
         public static Coordinate FoundEndOfShipCalcShot(Board board, Brain brain, ShipType ship)
         {
             Coordinate startingPoint = brain.InitialHitOfShip[ship];
-            if(brain.HitShotsDecreasing[ship] == null)
+            if (brain.ShipOnXAxis[ship].Value)
             {
-                if(brain.ShipOnXAxis[ship] == true)
-                {
-                    startingPoint.YCoordinate--;
-                    return startingPoint;
-                }
-                else
-                {
-                    startingPoint.XCoordinate--;
-                    return startingPoint;
-                }
+                startingPoint.XCoordinate--;
             }
             else
             {
-                var lastHit = brain.HitShotsDecreasing.Last();
-
-                if (brain.ShipOnX == true)
-                {
-                    lastHit.YCoordinate--;
-                    return startingPoint;
-                }
-                else
-                {
-                    lastHit.XCoordinate--;
-                    return startingPoint;
-                }
+                startingPoint.YCoordinate--;
             }
-
+            return startingPoint;
         }
 
         public static void UpdateBrainOnMiss(Brain brain, FireShotResponse response, Coordinate cord)
         {
            //determine if AI was even aiming at a ship
            //if it was did it know the ship direction
+           //if AI didnt know ship direction
            //if it knew the direction it must of reached the end of the ship
+
+            //ehhh still need logic to account for if the first shot is the end of ship
+           foreach(KeyValuePair<ShipType, bool> ship in brain.FiringAtShip)
+            {
+                //AI was aiming at ship and missed
+                if (ship.Value)
+                {
+                    //AI knows the ship direction
+                    if(brain.ShipOnXAxis[ship.Key] != null)
+                    {
+                        //AI found then end of the ship
+                        brain.FoundEndOfShips[ship.Key] = true;
+                    }
+                }
+            }
         }
 
         public static void UpdateBrainOnHitAndSunk(Brain brain, FireShotResponse response)
@@ -273,7 +269,16 @@ namespace BattleShip.UI
     
         public static ShipType? ShipCurrentlyUnderFire(Brain brain)
         {
-            var shipUnderFire = brain.FiringAtShip.First(x => x.Value == true).Key;
+            var shipUnderFire = new ShipType();
+            try
+            {
+                shipUnderFire = brain.FiringAtShip.First(x => x.Value == true).Key;
+            }
+            catch
+            {
+                return null;
+            }
+
             return shipUnderFire;
         }
 
@@ -333,13 +338,16 @@ namespace BattleShip.UI
                 else
                 {
                     //hit a ship that wasnt aiming at
-                    brain.ShipsToFireAtNext.Add(shipJustHit, cord);
+                    brain.ShipsToFireAtNext[shipJustHit] = cord;
+                    brain.InitialHitOfShip[shipJustHit] = cord;
+                    brain.HitShots[shipJustHit].Add(cord);
                 }
             }
             else
             {
                 //first hit of ship after random number gen
                 brain.InitialHitOfShip[shipJustHit] = cord;
+                brain.HitShots[shipJustHit].Add(cord);
                 UpdateFiringAtShip(shipJustHit, brain);
             }
         }
@@ -511,41 +519,67 @@ namespace BattleShip.UI
 
         public static Coordinate FoundDirectionCalcShot(Board board, Brain brain, ShipType ship)
         {
-           
-
-            
+            //what direction is the ship going
+            //start increasing on that axis
+            Coordinate LastHit = brain.HitShots[ship].Last();
+            //ship on xaxis
+            if (brain.ShipOnXAxis[ship].Value)
+            {
+                LastHit.XCoordinate++;
+            }
+            else
+            {
+                LastHit.YCoordinate++;
+            }
+            return LastHit;
         }
 
-        public static Coordinate FoundShipCalcDirection(Board board, Brain brain)
+        public static Coordinate FoundShipCalcDirection(Board board, Brain brain, ShipType ship)
         {
-            ShipType ship = ShipCurrentlyUnderFire(brain);
             Coordinate lastHit = brain.InitialHitOfShip[ship];
 
             //right to last hit
             Coordinate right = lastHit;
             right.XCoordinate++;
-            if((!board.HasCordBeenFiredAt(right)) && (board.IsValidCoordinate(right)))
+            if (!brain.SearchingForDirection["Right"])
             {
-                return right;
+                if ((!board.HasCordBeenFiredAt(right)) && (board.IsValidCoordinate(right)))
+                {
+                    brain.SearchingForDirection["Right"] = true;
+                    return right;
+                }
             }
-
+            
             //left to last hit
             Coordinate left = lastHit;
             left.XCoordinate--;
-            if ((!board.HasCordBeenFiredAt(left)) && (board.IsValidCoordinate(right)))
+            if (!brain.SearchingForDirection["Left"])
             {
-                return left;
+                if ((!board.HasCordBeenFiredAt(left)))
+                {
+                    if ((board.IsValidCoordinate(left)))
+                    {
+                        brain.SearchingForDirection["Left"] = true;
+                        return left;
+                    }
+                }
             }
 
             //up to last hit
             Coordinate up = lastHit;
             up.YCoordinate--;
-            if ((!board.HasCordBeenFiredAt(up)) && (board.IsValidCoordinate(right)))
+            if (!brain.SearchingForDirection["Up"])
             {
-                return up;
+                if ((!board.HasCordBeenFiredAt(up)) && (board.IsValidCoordinate(up)))
+                {
+                    brain.SearchingForDirection["Up"] = true;
+                    return up;
+                }
             }
+            
             //down to last hit
             Coordinate down = lastHit;
+            brain.SearchingForDirection["Down"] = true;
             down.YCoordinate++;
             return down;
         }
