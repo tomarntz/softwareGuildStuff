@@ -62,10 +62,10 @@ namespace BattleShip.BLL.GameLogic
             ShipsToFireAtNext = new Dictionary<ShipType, Coordinate>();
 
             SearchingForDirection = new Dictionary<string, bool>();
-            SearchingForDirection.Add("Right", false);
-            SearchingForDirection.Add("Left", false);
-            SearchingForDirection.Add("Up", false);
-            SearchingForDirection.Add("Down", false);
+            SearchingForDirection.Add("Right", true);
+            SearchingForDirection.Add("Left", true);
+            SearchingForDirection.Add("Up", true);
+            SearchingForDirection.Add("Down", true);
         }
     }
 }

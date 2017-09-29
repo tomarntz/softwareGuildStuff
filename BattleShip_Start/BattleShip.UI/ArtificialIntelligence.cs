@@ -478,7 +478,7 @@ namespace BattleShip.UI
                     return ShipType.Cruiser;
                 case "Carrier":
                     return ShipType.Carrier;
-                    //should never happen
+                //should never happen
                 default:
                     return ShipType.Carrier;
             }
@@ -536,52 +536,59 @@ namespace BattleShip.UI
 
         public static Coordinate FoundShipCalcDirection(Board board, Brain brain, ShipType ship)
         {
-            Coordinate lastHit = brain.InitialHitOfShip[ship];
+
 
             //right to last hit
-            Coordinate right = lastHit;
-            right.XCoordinate++;
-            if (!brain.SearchingForDirection["Right"])
+            if (brain.SearchingForDirection["Right"])
             {
-                if ((!board.HasCordBeenFiredAt(right)) && (board.IsValidCoordinate(right)))
+                Coordinate lastHitRight = brain.InitialHitOfShip[ship];
+
+                lastHitRight.XCoordinate++;
+                if ((!board.HasCordBeenFiredAt(lastHitRight)) && (board.IsValidCoordinate(lastHitRight)))
                 {
-                    brain.SearchingForDirection["Right"] = true;
-                    return right;
+                    brain.SearchingForDirection["Right"] = false;
+                    return lastHitRight;
                 }
+                lastHitRight.XCoordinate--;
             }
             
             //left to last hit
-            Coordinate left = lastHit;
-            left.XCoordinate--;
-            if (!brain.SearchingForDirection["Left"])
+            if (brain.SearchingForDirection["Left"])
             {
-                if ((!board.HasCordBeenFiredAt(left)))
+                Coordinate lastHitLeft = brain.InitialHitOfShip[ship];
+
+                lastHitLeft.XCoordinate--;
+                if ((!board.HasCordBeenFiredAt(lastHitLeft)))
                 {
-                    if ((board.IsValidCoordinate(left)))
+                    if ((board.IsValidCoordinate(lastHitLeft)))
                     {
-                        brain.SearchingForDirection["Left"] = true;
-                        return left;
+                        brain.SearchingForDirection["Left"] = false;
+                        return lastHitLeft;
                     }
                 }
+                lastHitLeft.XCoordinate++;
             }
 
             //up to last hit
-            Coordinate up = lastHit;
-            up.YCoordinate--;
-            if (!brain.SearchingForDirection["Up"])
+            if (brain.SearchingForDirection["Up"])
             {
-                if ((!board.HasCordBeenFiredAt(up)) && (board.IsValidCoordinate(up)))
+                Coordinate lastHitUp = brain.InitialHitOfShip[ship];
+
+                lastHitUp.YCoordinate--;
+                if ((!board.HasCordBeenFiredAt(lastHitUp)) && (board.IsValidCoordinate(lastHitUp)))
                 {
-                    brain.SearchingForDirection["Up"] = true;
-                    return up;
+                    brain.SearchingForDirection["Up"] = false;
+                    return lastHitUp;
                 }
+                lastHitUp.YCoordinate++;
             }
-            
+
             //down to last hit
-            Coordinate down = lastHit;
-            brain.SearchingForDirection["Down"] = true;
-            down.YCoordinate++;
-            return down;
+            Coordinate lastHitDown = brain.InitialHitOfShip[ship];
+
+            brain.SearchingForDirection["Down"] = false;
+            lastHitDown.YCoordinate++;
+            return lastHitDown;
         }
     }
 }
