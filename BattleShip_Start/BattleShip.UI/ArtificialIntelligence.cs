@@ -96,6 +96,7 @@ namespace BattleShip.UI
         public static List<Player> PrepareMatchAgainstAI()
         {
             List<Player> players = ConsoleIO.PromptName();
+            bool isCheater = Cheats.CheckForCheater();
             foreach (Player player in players)
             {
                 if (player.Name == "computer")
