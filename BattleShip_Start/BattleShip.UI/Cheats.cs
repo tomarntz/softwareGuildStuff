@@ -11,17 +11,13 @@ namespace BattleShip.UI
     {
         public static bool CheckForCheater()
         {
+
             string cheat = Console.ReadLine();
             if(cheat == "Catdog")
             {
-                PlaceAllShips();
                 return true;
             }
             return false;
-        }
-        public static void PlaceAllShips()
-        {
-
         }
     }
 }

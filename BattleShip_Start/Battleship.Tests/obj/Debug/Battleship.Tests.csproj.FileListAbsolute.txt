@@ -16,3 +16,4 @@ C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\Battleship.Tests\bin\Debug\n
 C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\Battleship.Tests\obj\Debug\Battleship.Tests.csprojResolveAssemblyReference.cache
 C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\Battleship.Tests\obj\Debug\Battleship.Tests.dll
 C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\Battleship.Tests\obj\Debug\Battleship.Tests.pdb
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\Battleship.Tests\obj\Debug\Battleship.Tests.csproj.CoreCompileInputs.cache

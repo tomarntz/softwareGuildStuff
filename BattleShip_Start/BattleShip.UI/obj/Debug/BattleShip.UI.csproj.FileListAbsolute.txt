@@ -22,3 +22,4 @@ C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\nuni
 C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\BattleShip.BLL.pdb
 C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\Battleship.Tests.pdb
 C:\SofwareGuild\softwareGuildStuff\BattleShip_Start\BattleShip.UI\bin\Debug\nunit.framework.xml
+C:\Users\23821\Desktop\New folder\softwareGuildStuff\BattleShip_Start\BattleShip.UI\obj\Debug\BattleShip.UI.csproj.CoreCompileInputs.cache

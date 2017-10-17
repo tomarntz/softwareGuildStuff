@@ -83,10 +83,6 @@ namespace BattleShip.UI
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 a = "M";
                                 break;
-                            case ShotHistory.Unknown:
-                                break;
-                            default:
-                                break;
                         }
                     }
                     Console.Write("{0,-4}", a);

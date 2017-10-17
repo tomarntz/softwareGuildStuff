@@ -103,9 +103,14 @@ namespace BattleShip.UI
                 {
                     PlaceShips(player.Board, player.Name);
                 }
-                else
+                else if(!isCheater)
                 {
                     GameWorkFlow.PlaceShip(player.Board, player.Name);
+                }
+                else
+                {
+                    Console.WriteLine("Cheat activated placing ships");
+                    PlaceShips(player.Board, player.Name);
                 }
             }
             return players;
@@ -164,25 +169,6 @@ namespace BattleShip.UI
             Console.Clear();
             Console.WriteLine(message);
             Console.WriteLine("****");
-            Thread.Sleep(250);
-            Console.Clear();
-            Console.Clear();
-            Console.WriteLine(message);
-            Console.WriteLine("*");
-            Thread.Sleep(250);
-            Console.Clear();
-            Console.WriteLine(message);
-            Console.WriteLine("**");
-            Thread.Sleep(250);
-            Console.Clear();
-            Console.WriteLine(message);
-            Console.WriteLine("***");
-            Thread.Sleep(250);
-            Console.Clear();
-            Console.WriteLine(message);
-            Console.WriteLine("****");
-            Thread.Sleep(250);
-            Console.Clear();
         }
 
         public static void EasyMode()
@@ -217,7 +203,7 @@ namespace BattleShip.UI
                     {
                         return FoundEndOfShipCalcShot(board, brain, shippy);
                     }
-                    return FoundDirectionCalcShot(board, brain, shippy);
+                    return FoundDirectionCalcShot(brain, shippy);
                 }
                 return FoundShipCalcDirection(board, brain, shippy);
             }
@@ -305,6 +291,8 @@ namespace BattleShip.UI
             return false;
         }
         
+
+        //bug in here when 2 hits
         public static void UpdateBrainOnHit(Brain brain, FireShotResponse response, Coordinate cord)
         {
             //Need to determine if this was the first hit and if so set initHit and FiringAtShip
@@ -518,7 +506,7 @@ namespace BattleShip.UI
         //        break;
         //}
 
-        public static Coordinate FoundDirectionCalcShot(Board board, Brain brain, ShipType ship)
+        public static Coordinate FoundDirectionCalcShot(Brain brain, ShipType ship)
         {
             //what direction is the ship going
             //start increasing on that axis
@@ -542,8 +530,9 @@ namespace BattleShip.UI
             //right to last hit
             if (brain.SearchingForDirection["Right"])
             {
-                Coordinate lastHitRight = brain.InitialHitOfShip[ship];
-
+                Coordinate initHitRight = brain.InitialHitOfShip[ship];
+                Coordinate lastHitRight = new Coordinate(initHitRight.XCoordinate, initHitRight.YCoordinate);
+                
                 lastHitRight.XCoordinate++;
                 if ((!board.HasCordBeenFiredAt(lastHitRight)) && (board.IsValidCoordinate(lastHitRight)))
                 {
@@ -556,7 +545,8 @@ namespace BattleShip.UI
             //left to last hit
             if (brain.SearchingForDirection["Left"])
             {
-                Coordinate lastHitLeft = brain.InitialHitOfShip[ship];
+                Coordinate initHitLeft = brain.InitialHitOfShip[ship];
+                Coordinate lastHitLeft = new Coordinate(initHitLeft.XCoordinate, initHitLeft.YCoordinate);
 
                 lastHitLeft.XCoordinate--;
                 if ((!board.HasCordBeenFiredAt(lastHitLeft)))
@@ -573,7 +563,8 @@ namespace BattleShip.UI
             //up to last hit
             if (brain.SearchingForDirection["Up"])
             {
-                Coordinate lastHitUp = brain.InitialHitOfShip[ship];
+                Coordinate initHitUp = brain.InitialHitOfShip[ship];
+                Coordinate lastHitUp = new Coordinate(initHitUp.XCoordinate, initHitUp.YCoordinate);
 
                 lastHitUp.YCoordinate--;
                 if ((!board.HasCordBeenFiredAt(lastHitUp)) && (board.IsValidCoordinate(lastHitUp)))
@@ -585,7 +576,8 @@ namespace BattleShip.UI
             }
 
             //down to last hit
-            Coordinate lastHitDown = brain.InitialHitOfShip[ship];
+            Coordinate initHitDown = brain.InitialHitOfShip[ship];
+            Coordinate lastHitDown = new Coordinate(initHitDown.XCoordinate, initHitDown.YCoordinate);
 
             brain.SearchingForDirection["Down"] = false;
             lastHitDown.YCoordinate++;

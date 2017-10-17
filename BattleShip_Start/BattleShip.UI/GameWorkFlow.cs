@@ -130,6 +130,7 @@ namespace BattleShip.UI
             {
                 while (!isvalid)
                 {
+
                     Coordinate cord = ArtificialIntelligence.CalcShot(board, brain);
                     response = board.FireShot(cord);
                     switch (response.ShotStatus)
@@ -217,6 +218,7 @@ namespace BattleShip.UI
 
         public static void TakeTurnsFiring(List<Player> Players)
         {
+            //check for win game cheat here 
             FireShotResponse rs = new FireShotResponse();
             while (rs.ShotStatus != ShotStatus.Victory)
             {
