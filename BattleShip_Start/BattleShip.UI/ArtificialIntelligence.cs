@@ -212,7 +212,8 @@ namespace BattleShip.UI
 
         public static Coordinate FoundEndOfShipCalcShot(Board board, Brain brain, ShipType ship)
         {
-            Coordinate startingPoint = brain.InitialHitOfShip[ship];
+            Coordinate initHit = brain.InitialHitOfShip[ship];
+            Coordinate startingPoint = new Coordinate(initHit.XCoordinate, initHit.YCoordinate);
             if (brain.ShipOnXAxis[ship].Value)
             {
                 startingPoint.XCoordinate--;
@@ -290,15 +291,15 @@ namespace BattleShip.UI
             }
             return false;
         }
-        
 
-        //bug in here when 2 hits
         public static void UpdateBrainOnHit(Brain brain, FireShotResponse response, Coordinate cord)
         {
             //Need to determine if this was the first hit and if so set initHit and FiringAtShip
             //continue with first step till the same ship is hit again to determine direction and set shipOnXAxis
             //continue hitting on axis determined by step 2 until a miss or a hit of a different ship set foundEndOfShip
+
             ShipType shipJustHit = ConverStringToShip(response.ShipImpacted);
+            brain.HitShots[shipJustHit].Add(cord);
             var shipAimingAt = ShipCurrentlyUnderFire(brain);
             //we have a ship in site
             if(shipAimingAt != null)
@@ -309,18 +310,23 @@ namespace BattleShip.UI
                     //ship hit twice able to set ship direction
                     if(brain.HitShots[shipJustHit].Count >= 2)
                     {
-                        //determine direction and set shipOnXAxis
-                        Coordinate lastHit = brain.HitShots[shipJustHit].Last();
-                        Coordinate secLast = brain.HitShots[shipJustHit][brain.HitShots[shipJustHit].Count - 2];
-                        if (lastHit.XCoordinate == secLast.XCoordinate)
+                        //if we know ship direction
+                        if (brain.ShipOnXAxis[shipJustHit] == null)
                         {
-                            brain.ShipOnXAxis[shipJustHit] = true;
-                            lastHit.YCoordinate++;
-                        }
-                        else
-                        {
-                            brain.ShipOnXAxis[shipJustHit] = false;
-                            lastHit.XCoordinate++;
+                            //determine direction and set shipOnXAxis
+                            Coordinate firstHit = brain.HitShots[shipJustHit].Last();
+                            Coordinate SecondHit = brain.HitShots[shipJustHit][brain.HitShots[shipJustHit].Count - 2];
+                            Coordinate lastHit = new Coordinate(firstHit.XCoordinate, firstHit.YCoordinate);
+                            Coordinate secLast = new Coordinate(firstHit.XCoordinate, firstHit.YCoordinate);
+
+                            if (lastHit.XCoordinate == secLast.XCoordinate)
+                            {
+                                brain.ShipOnXAxis[shipJustHit] = true;
+                            }
+                            else
+                            {
+                                brain.ShipOnXAxis[shipJustHit] = false;
+                            }
                         }
                     }
                 }
@@ -467,7 +473,6 @@ namespace BattleShip.UI
                     return ShipType.Cruiser;
                 case "Carrier":
                     return ShipType.Carrier;
-                //should never happen
                 default:
                     return ShipType.Carrier;
             }
