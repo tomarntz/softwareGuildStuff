@@ -188,6 +188,24 @@ namespace BattleShip.UI
 
         }
 
+        public static ShipType? CheckShipsToFireAtNext(Brain brain)
+        {
+            if(brain.ShipsToFireAtNext.Count != 0)
+            {
+                foreach(ShipType ship in Enum.GetValues(typeof(ShipType)))
+                {
+                    if(brain.ShipsToFireAtNext[ship] != null)
+                    {
+                        brain.ShipsToFireAtNext.Remove(ship);
+                        UpdateFiringAtShip(ship, brain);
+                        return ship;
+                    }
+                }
+            }
+            return null;
+        }
+
+        //set end of ship if x or y 10 before calc shot
         public static Coordinate CalcShot(Board board, Brain brain)
         {
             var ship = ShipCurrentlyUnderFire(brain);
@@ -207,9 +225,18 @@ namespace BattleShip.UI
                 }
                 return FoundShipCalcDirection(board, brain, shippy);
             }
+            //check queue for ships waiting to be sunk
+            else if(CheckShipsToFireAtNext(brain) != null)
+            {
+                var shipType = CheckShipsToFireAtNext(brain);
+                return FoundShipCalcDirection(board, brain, ConverStringToShip(shipType.ToString()));
+            }
             //random gen cord
             return MakeCoordinate();
         }
+
+        //still have issue with hit shots dictionary when searching for direction
+        //I think its on the third hit that shit gets fucked
 
         public static Coordinate FoundEndOfShipCalcShot(Board board, Brain brain, ShipType ship)
         {
@@ -328,6 +355,29 @@ namespace BattleShip.UI
                             else
                             {
                                 brain.ShipOnXAxis[shipJustHit] = false;
+                            }
+                        }
+                        //AI know what axis ship is on check to make sure the edge of ship isnt on edge of board and if so set found end of ship
+                        else
+                        {
+                            //if ship on x axis
+                            if (brain.ShipOnXAxis[shipJustHit].Value)
+                            {
+                                //if x cord it is 10
+                                if (cord.XCoordinate == 10)
+                                {
+                                    //then that is the end of the ship
+                                    brain.FoundEndOfShips[shipJustHit] = true;
+                                }
+                            }
+                            else
+                            {
+                                //if y cord it is 10
+                                if (cord.YCoordinate == 10)
+                                {
+                                    //then that is the end of the ship
+                                    brain.FoundEndOfShips[shipJustHit] = true;
+                                }
                             }
                         }
                     }
